@@ -1,0 +1,12 @@
+.DS_Store
+data/
+pdfs_*/
+qgis/
+*.npy
+*.tif
+*.gpkg
+*.geojson
+*.bck.py
+__pycache__/
+*.pyc
+Untitled-0.py
