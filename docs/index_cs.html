@@ -498,7 +498,7 @@
       <div class="step-number">KROK 04</div>
       <div class="step-title">Prediktivní model</div>
       <p class="step-desc">Klasifikátor Random Forest trénovaný na známých lokalitách s environmentálními proměnnými generuje mapu pravděpodobnosti výskytu.</p>
-      <div class="step-tool">scikit-learn · Rasterio</div>
+      <div class="step-tool">scikit-learn · GDAL · numpy</div>
     </div>
   </div>
 </section>
@@ -623,7 +623,7 @@
     </div>
     <div class="method-block">
       <h4>Prevence přeučení</h4>
-      <p>Model, který si trénovací data zapamatuje, selže na nových lokalitách. Dva parametry omezují složitost stromů: maximální hloubka 6 a minimum 5 vzorků v listu. Stabilní AUC 0,861 ± 0,016 naznačuje, že model generalizuje spíše než memoruje.</p>
+      <p>Model, který si trénovací data zapamatuje, selže na nových lokalitách. Dva parametry omezují složitost stromů: maximální hloubka 6 a minimum 5 vzorků v listu. Prostorové CV AUC 0,756 ± 0,136 napříč pěti geografickými složkami naznačuje, že model generalizuje spíše než memoruje.</p>
     </div>
     <div class="method-block">
       <h4>Gaussovské vyhlazení</h4>
@@ -661,7 +661,7 @@
   <p>Jde o proof of concept v rané fázi vývoje. Platí několik důležitých omezení.</p>
 
   <div class="disclaimer">
-    <p>Korpus odráží potenciální zkreslení způsobené ručním výběrem zdrojů jediným výzkumníkem. Geografické rozložení extrahovaných lokalit může nadměrně nebo nedostatečně zastupovat určité regiony či období ve srovnání se skutečným archeologickým záznamem. Krok geokódování přináší další nejistotu, zejména u lokalit popsaných pouze na úrovni okresu nebo kraje. Výsledky je nutné považovat za hypotézy k dalšímu ověření, nikoliv za závěry. Prediktivní model po dokončení vyprodukuje mapu pravděpodobnosti — ne seznam konkrétních lokalit.</p>
+    <p>Korpus odráží potenciální zkreslení způsobené ručním výběrem zdrojů jediným výzkumníkem. Geografické rozložení extrahovaných lokalit může nadměrně nebo nedostatečně zastupovat určité regiony či období ve srovnání se skutečným archeologickým záznamem. Krok geokódování přináší další nejistotu, zejména u lokalit popsaných pouze na úrovni okresu nebo kraje. Výsledky je nutné považovat za hypotézy k dalšímu ověření, nikoliv za závěry. Prediktivní model vyprodukuje mapu pravděpodobnosti — ne potvrzené polohy konkrétních lokalit.</p>
   </div>
 
   <h3>Známé problémy aktuální verze</h3>
@@ -690,7 +690,6 @@
     <span class="tech-tag">PyMuPDF</span>
     <span class="tech-tag">GeoPandas</span>
     <span class="tech-tag">scikit-learn</span>
-    <span class="tech-tag">Rasterio</span>
     <span class="tech-tag">Nominatim</span>
     <span class="tech-tag">QGIS</span>
     <span class="tech-tag">Shapely</span>

@@ -531,7 +531,7 @@
       <div class="step-number">STEP 04</div>
       <div class="step-title">Predictive Model</div>
       <p class="step-desc">Random Forest classifier trained on known site locations with environmental covariates generates a probability heatmap.</p>
-      <div class="step-tool">scikit-learn · Rasterio</div>
+      <div class="step-tool">scikit-learn · GDAL · numpy</div>
     </div>
   </div>
 </section>
@@ -656,7 +656,7 @@
     </div>
     <div class="method-block">
       <h4>Overfitting prevention</h4>
-      <p>A model that memorises its training data performs well on what it has seen but fails on new locations. Two parameters limit tree complexity: maximum depth of 6 (trees cannot grow arbitrarily elaborate) and minimum 5 samples per leaf (no split is made on fewer than 5 data points). The stable AUC of 0.861 ± 0.016 across folds suggests the model generalises rather than memorises.</p>
+      <p>A model that memorises its training data performs well on what it has seen but fails on new locations. Two parameters limit tree complexity: maximum depth of 6 (trees cannot grow arbitrarily elaborate) and minimum 5 samples per leaf (no split is made on fewer than 5 data points). The spatial block CV AUC of 0.756 ± 0.136 across five geographic folds suggests the model generalises rather than memorises.</p>
     </div>
     <div class="method-block">
       <h4>Gaussian smoothing</h4>
@@ -694,7 +694,7 @@
   <p>This is a proof of concept at an early stage of development. Several important limitations apply.</p>
 
   <div class="disclaimer">
-    <p>The corpus reflects potential bias inherent in manual source selection by a single researcher. The geographic distribution of extracted sites may over- or under-represent certain regions or periods relative to the true archaeological record. The geocoding step introduces additional uncertainty, particularly for sites described only at the district or region level. Results should be treated as hypotheses for further investigation, not as conclusions. The predictive model, when completed, will output probability surfaces — not site locations.</p>
+    <p>The corpus reflects potential bias inherent in manual source selection by a single researcher. The geographic distribution of extracted sites may over- or under-represent certain regions or periods relative to the true archaeological record. The geocoding step introduces additional uncertainty, particularly for sites described only at the district or region level. Results should be treated as hypotheses for further investigation, not as conclusions. The predictive model outputs probability surfaces — not confirmed site locations.</p>
   </div>
 
   <h3>Known issues in current version</h3>
@@ -723,7 +723,6 @@
     <span class="tech-tag">PyMuPDF</span>
     <span class="tech-tag">GeoPandas</span>
     <span class="tech-tag">scikit-learn</span>
-    <span class="tech-tag">Rasterio</span>
     <span class="tech-tag">Nominatim</span>
     <span class="tech-tag">QGIS</span>
     <span class="tech-tag">Shapely</span>
@@ -756,7 +755,7 @@
   <h2>Where this <em>goes next</em></h2>
 
   <h3>Short term</h3>
-  <p>Complete extraction run across all 281 papers. Improve geocoding precision by tuning the extraction prompt to capture village-level place names. Download Czech ČÚZK LiDAR data and SRTM elevation for the study area. Run first complete predictive model with spatial cross-validation.</p>
+  <p>Improve geocoding precision by tuning the extraction prompt to capture village-level place names — currently ~49% of attempts fail or return only regional coordinates. Integrate Czech ČÚZK LiDAR derivatives to address the river valley resolution problem. Implement geographic clustering for spatial blocks rather than the current longitudinal strip approach.</p>
 
   <h3>Medium term</h3>
   <p>Build OCR preprocessing step for the 185 scanned PDFs — older Czech and Slovak journals from the 1930s–1960s containing primary source data unavailable in any digital database. Add loess distribution layer from ESDAC. Implement per-period models separating Palaeolithic, Neolithic, Eneolithic, and Bronze Age.</p>
@@ -768,7 +767,7 @@
 <!-- FOOTER -->
 <footer>
   <p>This project is in active development. Results presented here are preliminary and should not be cited or used for any planning or heritage management purpose.</p>
-  <p class="mono">CE ARCHAEOLOGICAL SITE PREDICTION · DRAFT v0.1 · 2026</p>
+  <p class="mono">CE ARCHAEOLOGICAL SITE PREDICTION · v1.0 · 2026</p>
 </footer>
 
 <script>
