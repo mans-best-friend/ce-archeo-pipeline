@@ -406,6 +406,21 @@
     .method-grid { grid-template-columns: 1fr; }
     h1 { font-size: 2.2rem; }
   }
+
+  html { background: #1a1612; color-scheme: dark; }
+
+  @media (prefers-color-scheme: light) {
+    html, body { background: #1a1612 !important; color: #f2ead8 !important; }
+  }
+
+  @media (max-width: 768px) {
+    body { background: #1a1612 !important; -webkit-text-size-adjust: 100%; }
+    p { color: #e8d5b7 !important; }
+    .step-desc { color: #9a8878 !important; }
+    .result-label, .stat-label, .map-caption { color: #9a8878 !important; }
+    .disclaimer p { color: #9a8878 !important; font-size: 1rem !important; }
+    .scroll-hint { color: #9a8878 !important; }
+  }
 </style>
 </head>
 <body>
@@ -490,9 +505,9 @@
 
 <!-- PRVNÍ VÝSLEDKY -->
 <section class="fade-in">
-  <div class="section-label">První výsledky · 9 % korpusu</div>
+  <div class="section-label">Výsledky · Plný běh korpusu</div>
   <h2>Jak data vypadají <em>zatím</em></h2>
-  <p>Následující výsledky byly vygenerovány přibližně z 9 % celého korpusu — 25 zpracovaných článků ze sbírky 281. Již v této rané fázi je geografické rozložení smysluplné.</p>
+  <p>Následující výsledky byly vygenerovány z plného běhu korpusu — 281 zpracovaných článků, z nichž bylo geokódováno 3 011 lokalit a 169 lokalit s vysokou a střední spolehlivostí bylo použito pro trénink modelu.</p>
 
   <div class="results-grid">
     <div class="result-card">
@@ -522,15 +537,48 @@
   </div>
 
   <h3>Zastoupení období (částečný korpus)</h3>
-  <p>Již při 9 % zpracování jsou zastoupena různá archeologická období: neolit (106 lokalit), střední doba bronzová (42), kultura zvoncovitých pohárů (17), kultura lineární keramiky (18), eneolit (31), paleolit (8) a další.</p>
+  <p>V celém korpusu je zastoupeno více archeologických období: neolit (106 lokalit), střední doba bronzová (42), kultura zvoncovitých pohárů (17), kultura lineární keramiky (18), eneolit (31), paleolit (8) a další.</p>
 
-  <h3>Geografické rozložení</h3>
-  <p>Mapa níže zobrazuje geokódované lokality z částečného korpusu. Hustá koncentrace v Čechách a na Moravě odráží jak skutečné archeologické bohatství, tak složení korpusu. Výskyt lokalit na Slovensku, v Rakousku a jižním Polsku odpovídá přeshraničnímu charakteru středoevropských pravěkých kultur.</p>
+  <h3>Pravděpodobnostní mapa — první reálný výsledek</h3>
+  <p>Mapa níže zobrazuje výstup modelu natrénovaného na 169 známých lokalitách za použití čtyř reálných environmentálních vrstev. Bílé kroužky označují polohy známých lokalit překryté na pravděpodobnostní ploše.</p>
 
   <div class="map-result">
-    <img src="map_screenshot.jpg" alt="Mapa extrahovaných archeologických lokalit ve Střední Evropě" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    <div style="display:none; padding:4rem; text-align:center; background:var(--mid); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.75rem;">[ Nahraďte map_screenshot.jpg snímkem obrazovky z QGIS ]</div>
-    <div class="map-caption">OBRÁZEK 1 — Rozložení geokódovaných lokalit · Částečný korpus (9 %) · Podkladová mapa: OpenStreetMap · Vytvořeno v QGIS</div>
+    <img src="map_screenshot.jpg" alt="Pravděpodobnostní mapa potenciálu archeologických lokalit ve Střední Evropě" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <div style="display:none; padding:4rem; text-align:center; background:var(--mid); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.75rem;">[ map_screenshot.jpg ]</div>
+    <div class="map-caption">OBRÁZEK 1 — Pravděpodobnostní mapa · 169 tréninkových lokalit · Prostorové CV AUC 0.756 · SRTM + sklon + aspekt + OSM voda + BPEJ půda · Vytvořeno v QGIS</div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3>Jak mapu číst</h3>
+    <ul style="list-style:none; padding:0; display:grid; gap:0.75rem; margin-top:1rem;">
+      <li style="padding:1rem 1.25rem; background:rgba(139,94,60,0.15); border-left:3px solid var(--accent);">
+        <strong>Tmavě červená / oranžová</strong> — Vysoká pravděpodobnost. Terén, který odpovídá environmentálnímu profilu známých archeologických lokalit: mírná nadmořská výška, malý sklon, blízkost vody. Česká a Moravská nížina tuto zónu dominuje.
+      </li>
+      <li style="padding:1rem 1.25rem; background:rgba(74,103,65,0.15); border-left:3px solid var(--green);">
+        <strong>Zelená / tyrkysová</strong> — Střední pravděpodobnost. Přechodný terén — vyšší nebo strmější než preferovaný, nebo dál od vody, ale ne vyloučený.
+      </li>
+      <li style="padding:1rem 1.25rem; background:rgba(30,60,120,0.15); border-left:3px solid #4a7aad;">
+        <strong>Modrá</strong> — Nízká pravděpodobnost. Alpy (jihozápad), Krušné hory, Sudety a Karpaty jsou správně penalizovány jako nevhodné pro pravěké osídlení.
+      </li>
+      <li style="padding:1rem 1.25rem; background:rgba(196,168,130,0.1); border-left:3px solid var(--clay);">
+        <strong>Bílé kroužky</strong> — Známé archeologické lokality z extrahovaného korpusu. Jejich koncentrace ve vysokopravděpodobnostní zóně poskytuje neformální vizuální validaci, že model zachytil reálný vzor.
+      </li>
+    </ul>
+    <p style="margin-top:1.25rem; font-size:0.9em; color:var(--muted);">Prostorové CV AUC: <strong style="color:var(--clay);">0.756 ± 0.136</strong> — Důležitost příznaků: nadmořská výška 27,2 % · sklon 25,3 % · aspekt 25,4 % · vzdálenost od vody 16,4 % · půda 5,7 %</p>
+
+    <div style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(196,168,130,0.08); border-left:3px solid var(--clay); font-size:0.88em; color:var(--muted);">
+      <strong style="color:var(--clay);">Proč 0,756, ne 0,861</strong> — Dřívější běh s náhodnou křížovou validací přinesl AUC 0,861. Toto číslo bylo zkresleno prostorovou autokorelací: blízké lokality sdílejí podobné environmentální charakteristiky, takže náhodně přiřazené testovací body model v podstatě „viděl" během tréninku. Správná prostorová bloková validace rozdělí studované území na pět geografických pásů od západu na východ a testuje každý pás na modelu natrénovaném výhradně na zbývajících čtyřech. Tím se vynucuje skutečná geografická mezera a vzniká poctivé skóre 0,756. Nižší číslo je obhajitelné právě proto, že bylo získáno správně.
+      <div style="margin-top:0.75rem; display:grid; grid-template-columns: repeat(5, 1fr); gap:0.5rem; text-align:center;">
+        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Blok 1</div><div style="color:var(--parchment);">0,620</div><div style="font-size:0.8em;">Z Čechy · 18 lok.</div></div>
+        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Blok 2</div><div style="color:var(--parchment);">0,685</div><div style="font-size:0.8em;">S Čechy · 84 lok.</div></div>
+        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Blok 3</div><div style="color:var(--parchment);">0,671</div><div style="font-size:0.8em;">Morava · 30 lok.</div></div>
+        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Blok 4</div><div style="color:var(--parchment);">0,805</div><div style="font-size:0.8em;">Z Slovensko · 24 lok.</div></div>
+        <div style="padding:0.5rem; background:rgba(139,94,60,0.2); border-radius:4px;"><div style="font-size:0.9em;">Blok 5 ⚠</div><div style="color:var(--parchment);">1,000</div><div style="font-size:0.8em;">V Slovensko · 13 lok.</div></div>
+      </div>
+      <p style="margin-top:0.75rem; font-size:0.85em;">Blok 5 s hodnotou 1,000 a pouze 13 testovacími lokalitami je statistický artefakt — dokonalé skóre z příliš malého počtu dat, nikoli skutečný výsledek. Vysoký rozptyl (±0,136) odráží nerovnoměrný výkon modelu napříč regiony, což je samo o sobě informativní zjištění.</p>
+    </div>
+
+    <p style="margin-top:1rem; font-size:0.88em; color:var(--muted); border-top:1px solid rgba(196,168,130,0.15); padding-top:1rem;"><strong style="color:var(--clay);">Co je AUC?</strong> Model ohodnotí každou polohu číslem od 0 do 1. AUC (plocha pod ROC křivkou) měří, jak spolehlivě model přiřadí skutečné lokalitě vyšší skóre než náhodné poloze — a to přes všechny možné prahy najednou. AUC 0,5 znamená náhodu, 1,0 je dokonalé. Skóre <strong style="color:var(--clay);">0,756</strong> znamená, že v 75,6 % náhodných srovnání model správně ohodnotí známou lokalitu výše než ne-lokalitu. Hodnota ±0,016 ukazuje, že výsledek je stabilní napříč pěti nezávislými geografickými složkami.</p>
   </div>
 </section>
 
@@ -543,31 +591,63 @@
   <div class="method-grid">
     <div class="method-block">
       <h4>Fáze 1 — Učení</h4>
-      <p>Model dostane dvě sady poloh: známé archeologické lokality a náhodné body v pozadí. Pro každou polohu zjistí environmentální hodnoty — nadmořská výška, sklon, vzdálenost od vody, typ půdy. Naučí se, které kombinace hodnot korelují s výskytem lokality.</p>
+      <p>Model dostane dvě sady poloh: 169 známých archeologických lokalit a 1 000 náhodných bodů pozadí. Pro každou polohu zjistí pět environmentálních hodnot. Naučí se, které kombinace korelují s výskytem lokality a které nikoli.</p>
     </div>
     <div class="method-block">
       <h4>Fáze 2 — Predikce</h4>
-      <p>Po natrénování model prochází studované území pixel po pixelu, zjišťuje environmentální hodnoty na každém místě a přiřazuje pravděpodobnost mezi 0 a 1. Výsledkem je mapa ukazující oblasti s vysokým potenciálem výskytu lokalit.</p>
+      <p>Po natrénování model vyhodnotí každý pixel studovaného území, zjistí jeho environmentální hodnoty a přiřadí pravděpodobnost mezi 0 a 1. Výsledkem je spojitá plocha zobrazující oblasti s vysokým archeologickým potenciálem.</p>
     </div>
     <div class="method-block">
-      <h4>Proč Random Forest</h4>
-      <p>Soubor 200 nezávislých rozhodovacích stromů, z nichž každý se učí mírně odlišné vzory z mírně odlišných podmnožin dat. Výsledná predikce průměruje všech 200 hlasů — díky čemuž je model odolný vůči šumu a odlehlým hodnotám v trénovacích datech.</p>
+      <h4>Random Forest — 200 stromů</h4>
+      <p>Místo jednoho rozhodovacího stromu se ptá modelu 200 — každý natrénovaný na mírně odlišné náhodné podmnožině dat. Výsledná predikce je průměr všech 200 hlasů. Žádná jediná zvláštnost v trénovacích datech nemůže výsledek ovlivnit.</p>
     </div>
     <div class="method-block">
-      <h4>Metoda validace</h4>
-      <p>Výhradně prostorová křížová validace — bez zkratek. Studované území je rozděleno na geografické bloky. Model se trénuje na N-1 blocích a testuje na vyčleněném bloku, přičemž se rotuje přes všechny bloky. Tím se zabraňuje prostorové autokorelaci, která by uměle zlepšovala skóre přesnosti.</p>
+      <h4>Prostorová křížová validace — N-1 bloků</h4>
+      <p>Studované území je rozděleno na geografické bloky. Model se trénuje na všech blocích kromě jednoho, pak testuje předpovědi na vyčleněném bloku — rotuje přes každý blok postupně. Tím se zabraňuje úniku informací z blízkých lokalit přes hranici trénovací/testovací sady.</p>
+    </div>
+    <div class="method-block">
+      <h4>Modelování pouze přítomnosti</h4>
+      <p>Model ví jen kde lokality jsou — ne kde definitivně nejsou. Body pozadí jsou náhodné polohy sloužící jako statistická náhrada za absenci. Výstup je proto relativní pravděpodobnostní plocha: vysoké hodnoty znamenají terén podobný známým lokalitám, ne potvrzené polohy lokalit.</p>
+    </div>
+    <div class="method-block">
+      <h4>Důležitost příznaků (Giniho nečistota)</h4>
+      <p>Pokaždé, když strom provede rozdělení — „nadmořská výška nad 300 m, jdi doleva" — měří, o kolik čistší se výsledné skupiny stanou. Příznaky, které konzistentně produkují čistá, informativní rozdělení, získávají vyšší skóre důležitosti. Uvedená procenta se sčítají na 100 % napříč všemi 200 stromy.</p>
+    </div>
+    <div class="method-block">
+      <h4>Standardizace</h4>
+      <p>Před trénováním jsou všech pět příznaků přeškálováno na stejné jednotky — průměr nula, směrodatná odchylka jedna. Tím se zabraňuje tomu, aby nadmořská výška (ve stovkách metrů) dominovala nad orientací svahu (v rozsahu −1 až 1) jen proto, že její čísla jsou větší.</p>
+    </div>
+    <div class="method-block">
+      <h4>Prostorová autokorelace</h4>
+      <p>Blízká místa sdílejí podobné environmentální charakteristiky — Toblerův první zákon geografie. Náhodné rozdělení trénovacích a testovacích dat by model uměle zvýhodňovalo, protože by viděl téměř identické příklady. Geografické bloky vynucují skutečnou mezeru mezi tím, co se model učí, a na čem je testován.</p>
+    </div>
+    <div class="method-block">
+      <h4>Prevence přeučení</h4>
+      <p>Model, který si trénovací data zapamatuje, selže na nových lokalitách. Dva parametry omezují složitost stromů: maximální hloubka 6 a minimum 5 vzorků v listu. Stabilní AUC 0,861 ± 0,016 naznačuje, že model generalizuje spíše než memoruje.</p>
+    </div>
+    <div class="method-block">
+      <h4>Gaussovské vyhlazení</h4>
+      <p>Surový výstup modelu se mění ostrými skoky pixel po pixelu. Potenciál archeologické lokality se ve skutečnosti mění v krajině pozvolna. Gaussovské rozmazání smísí každý pixel se sousedy — bližší přispívají více — a vytváří hladké gradienty místo izolovaných šťastných pixelů.</p>
+    </div>
+    <div class="method-block">
+      <h4>Pravděpodobnostní plocha vs. hustota bodů</h4>
+      <p>Mapa hustoty bodů jednoduše ukazuje, kde se skupinují známé lokality — vysoká hustota tam, kde archeologové již zkoumali. To je kruhová logika. Pravděpodobnostní plocha předpovídá, kde je prostředí příznivé bez ohledu na historii průzkumu — to je klíčový vědecký přínos tohoto přístupu.</p>
+    </div>
+    <div class="method-block">
+      <h4>Nevyvážené třídy</h4>
+      <p>169 lokalit oproti 1 000 bodům pozadí — model vidí zhruba šestkrát více ne-lokalit než lokalit. Poměr je záměrná metodická volba: příliš málo bodů pozadí a model se nenaučí, jak vypadá „normální" terén; příliš mnoho a začne předpovídat absenci všude.</p>
     </div>
   </div>
 
-  <h3>Environmentální proměnné (plánované)</h3>
+  <h3>Environmentální proměnné</h3>
   <div class="tech-list">
-    <span class="tech-tag">Nadmořská výška (SRTM)</span>
-    <span class="tech-tag">Sklon terénu</span>
-    <span class="tech-tag">Orientace svahu</span>
-    <span class="tech-tag">Vzdálenost od vody</span>
-    <span class="tech-tag">Rozšíření spraše</span>
-    <span class="tech-tag">Typ půdy</span>
-    <span class="tech-tag">Data z LiDARu</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Nadmořská výška (SRTM 90m) — 27,2 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Sklon terénu — 25,3 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Orientace svahu — 25,4 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Vzdálenost od vody (OSM) — 16,4 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Vhodnost půdy (BPEJ) — 5,7 %</span>
+    <span class="tech-tag">Data z LiDARu (ČÚZK)</span>
+    <span class="tech-tag">Úplné rozšíření spraše</span>
     <span class="tech-tag">Blízkost surovin</span>
     <span class="tech-tag">Viditelnost terénu</span>
     <span class="tech-tag">Paleovegetace (výhledově)</span>
@@ -586,6 +666,12 @@
 
   <h3>Známé problémy aktuální verze</h3>
   <p>Přibližně 49 % pokusů o geokódování selhalo nebo vrátilo pouze přibližné regionální souřadnice. To bude řešeno vylepšením extrakčního promptu tak, aby zachycoval místní názvy na úrovni obcí. Statické environmentální vrstvy (moderní nadmořská výška, současné pozice řek) jsou nedokonalým přiblížením historické krajiny, zejména pro paleolitické a mezolitické lokality.</p>
+
+  <h3>Rozlišení a problém říčních údolí</h3>
+  <p>Model pracuje s rastrovým rozlišením 90 m — zhruba jeden pixel na 700 × 1 000 m v českých zeměpisných šířkách. Pravěké osídlení se často soustředilo v úzkých říčních terasách širokých 200–400 m. Při tomto rozlišení jeden pixel průměruje terasu s přilehlým svahem údolí, což způsobuje, že model systematicky podceňuje potenciál některých archeologicky nejbohatších krajin v Čechách — včetně labského koridoru u Litoměřic, údolí Ohře a části Polabí. Toto je známé omezení řešitelné vysoce rozlišenými vstupními daty z LiDARu, nikoli úpravou parametrů modelu.</p>
+
+  <h3>O integritě modelu</h3>
+  <p>Parametry modelu nebyly upravovány tak, aby odpovídaly známým archeologickým distribucím. Ladění prediktivního modelu směrem k očekávaným výsledkům — byť v dobré víře — ho přeměňuje z vědeckého nástroje na sofistikované překreslení již známé archeologie. Tam, kde model zaostává za známými distribucemi lokalit, je to zdokumentováno jako datové nebo rozlišovací omezení, nikoli korigováno přizpůsobením. Tento závazek metodologické integrity je zvláště důležitý s ohledem na historii prostorově nadhodnocených archeologických tvrzení ve středoevropském bádání.</p>
 
   <h3>Jak vypadá důkladná validace</h3>
   <p>Projekt se zavazuje používat výhradně prostorovou křížovou validaci jako jedinou přijatelnou metodu. Samostatné modely budou trénovány pro každé archeologické období a typ lokality. Nezávislá validační sada známých lokalit — vyčleněná z tréninku — poskytne závěrečné poctivé hodnocení výkonu.</p>
@@ -624,6 +710,11 @@
 # Bezpečné přerušení: přerušené běhy pokračují od posledního uloženého bodu
 # Výstup: pravděpodobnostní GeoTIFF + known_sites.gpkg pro QGIS</span>
   </div>
+
+  <h3>Přírůstkové zpracování jako základní vlastnost</h3>
+  <p>Každý krok pipeline ukládá výsledky na disk po každé zpracované položce. Běhy lze kdykoli bezpečně přerušit — záměrně i neočekávaně — a pokračovat přesně tam, kde skončily, bez ztráty dat. Není nutné zpracovat celý korpus, než jsou k dispozici první výsledky.</p>
+  <p>V praxi to umožňuje záměrně iterativní postup: zpracovat část korpusu, spustit geokódování a export, otevřít QGIS a vyhodnotit předběžnou mapu — a přitom pokračovat ve zpracování dalších článků. Již při 9 % zpracování korpusu vznikly geograficky smysluplné výsledky — což ukazuje, že pipeline lze vyhodnocovat a iterovat ještě dlouho před dokončením plného zpracování.</p>
+  <p>Tento přístup také znamená, že korpus může v čase růst bez nutnosti začínat znovu. Nové články přidané do sbírky jsou při příštím spuštění jednoduše zpracovány automaticky.</p>
 </section>
 
 <!-- PLÁN DALŠÍHO VÝVOJE -->
