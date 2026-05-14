@@ -453,6 +453,16 @@
   <div class="scroll-hint">↓ Scrollovat dolů</div>
 </div>
 
+
+<!-- ABSTRAKT -->
+<section class="fade-in">
+  <div class="section-label">Abstrakt</div>
+  <h2>Výpočetní přístup k <em>predikci pravěkých lokalit</em></h2>
+  <p>Prediktivní modelování neobjevených archeologických lokalit ve Střední Evropě bylo dosud omezeno jazykovou bariérou regionální literatury — většina primárních nálezových zpráv, katalogů lokalit a syntéz je psána česky, slovensky, německy, polsky, maďarsky a rumunsky a zůstává z velké části nepřítomna v anglicky psaných výpočetních databázích. Tento projekt tuto mezeru řeší automatizovanou pipeline, která zpracovává vícejazyčné PDF soubory pomocí lokálně spuštěného velkého jazykového modelu (Mistral 7B Instruct), extrahuje strukturovaná data o lokalitách — název, období, typ a polohu — a geokóduje výsledky na geografické souřadnice.</p>
+  <p>Extrahovaný a geokódovaný korpus lokalit slouží jako tréninková data pro klasifikátor Random Forest, který se z pěti reálných datových vrstev učí environmentální signaturu pravěkého osídlení: výška, sklon a orientace svahu odvozené ze SRTM na rozlišení 90 m; vzdálenost od vodních toků vypočtená z dat OpenStreetMap; a vhodnost půdy odvozená z české klasifikace BPEJ v měřítku 1:5 000. Výkon modelu je hodnocen prostorovou blokovou křížovou validací — studované území je rozděleno do pěti zeměpisných pásů a model je testován na každém pásu zvlášť, čímž je zajištěna absence prostorové autokorelace mezi tréninkovými a testovacími daty. Výsledná pravděpodobnostní plocha dosahuje prostorového CV AUC 0,756 na území České republiky a Slovenska a správně identifikuje nížinné zemědělské zóny jako oblasti s vysokou pravděpodobností osídlení, zatímco pohoří a strmý terén jsou správně penalizovány.</p>
+  <p>Všechny komponenty běží lokálně na spotřebitelském hardwaru výhradně s bezplatnými nástroji s otevřeným zdrojovým kódem. Celá pipeline, natrénovaný model a dvojjazyčná dokumentace jsou dostupné na <a href="https://github.com/mans-best-friend/ce-archeo-pipeline" style="color:var(--clay);">github.com/mans-best-friend/ce-archeo-pipeline</a>.</p>
+</section>
+
 <!-- CO JE TENTO PROJEKT -->
 <section class="fade-in">
   <div class="section-label">Přehled</div>
@@ -506,7 +516,7 @@
 <!-- PRVNÍ VÝSLEDKY -->
 <section class="fade-in">
   <div class="section-label">Výsledky · Plný běh korpusu</div>
-  <h2>Jak data vypadají <em>zatím</em></h2>
+  <h2>Výsledky <em>plného běhu korpusu</em></h2>
   <p>Následující výsledky byly vygenerovány z plného běhu korpusu — 281 zpracovaných článků, z nichž bylo geokódováno 3 011 lokalit a 169 lokalit s vysokou a střední spolehlivostí bylo použito pro trénink modelu.</p>
 
   <div class="results-grid">
@@ -536,7 +546,7 @@
     </div>
   </div>
 
-  <h3>Zastoupení období (částečný korpus)</h3>
+  <h3>Zastoupení období</h3>
   <p>V celém korpusu je zastoupeno více archeologických období: neolit (106 lokalit), střední doba bronzová (42), kultura zvoncovitých pohárů (17), kultura lineární keramiky (18), eneolit (31), paleolit (8) a další.</p>
 
   <h3>Pravděpodobnostní mapa — první reálný výsledek</h3>

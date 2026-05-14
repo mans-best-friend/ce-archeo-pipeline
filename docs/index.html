@@ -486,6 +486,16 @@
   <div class="scroll-hint">↓ Scroll to explore</div>
 </div>
 
+
+<!-- ABSTRACT -->
+<section class="fade-in">
+  <div class="section-label">Abstract</div>
+  <h2>A computational approach to <em>prehistoric site prediction</em></h2>
+  <p>Predictive modelling of undiscovered archaeological sites in Central Europe has historically been constrained by the language barrier of the regional literature — the majority of primary excavation reports, site catalogues, and synthesis papers are written in Czech, Slovak, German, Polish, Hungarian, and Romanian, and remain largely absent from English-language computational databases. This project addresses that gap with an automated pipeline that processes multilingual PDFs using a locally-run large language model (Mistral 7B Instruct), extracts structured site data — name, period, type, and location — and geocodes the results to geographic coordinates.</p>
+  <p>The extracted and geocoded site corpus serves as training data for a Random Forest classifier that learns the environmental signature of prehistoric settlement from five real-data layers: SRTM-derived elevation, slope, and aspect at 90m resolution; distance to waterways computed from OpenStreetMap data; and soil favourability derived from the Czech BPEJ classification at 1:5000 scale. Model performance is assessed using spatial block cross-validation — the study area is divided into five longitudinal geographic strips and the model is tested on each strip in turn, ensuring no spatial autocorrelation between training and test data. The resulting probability surface achieves a spatial CV AUC of 0.756 across Czech and Slovak territory, correctly identifying lowland agricultural zones as high-probability settlement areas while penalising mountain ranges and steep terrain.</p>
+  <p>All components run locally on consumer hardware using exclusively free and open-source tools. The full pipeline, trained model, and bilingual documentation are available at <a href="https://github.com/mans-best-friend/ce-archeo-pipeline" style="color:var(--clay);">github.com/mans-best-friend/ce-archeo-pipeline</a>.</p>
+</section>
+
 <!-- WHAT IS THIS -->
 <section class="fade-in">
   <div class="section-label">Overview</div>
@@ -539,7 +549,7 @@
 <!-- FIRST RESULTS -->
 <section class="fade-in">
   <div class="section-label">Results · Full Corpus Run</div>
-  <h2>What the data looks like <em>so far</em></h2>
+  <h2>Results from the <em>full corpus run</em></h2>
   <p>The following results were generated from the full corpus run — 281 papers processed, yielding 3,011 geocoded sites of which 169 high and medium confidence sites were used for model training.</p>
 
   <div class="results-grid">
@@ -569,7 +579,7 @@
     </div>
   </div>
 
-  <h3>Period breakdown (partial corpus)</h3>
+  <h3>Period breakdown</h3>
   <p>Multiple archaeological periods are represented across the full corpus: Neolithic (106 sites), Middle Bronze Age (42), Bell Beaker (17), LBK/Linearbandkeramik (18), Eneolithic (31), Palaeolithic (8), and others.</p>
 
   <h3>Probability heatmap — first real result</h3>
@@ -698,7 +708,7 @@
   </div>
 
   <h3>Known issues in current version</h3>
-  <p>Approximately 49% of geocoding attempts failed or returned only broad regional coordinates. This will be addressed by improving the extraction prompt to capture more specific place names. The static environmental layers (modern elevation, current river positions) are an imperfect proxy for past landscapes, particularly for Palaeolithic and Mesolithic sites.</p>
+  <p>Approximately 49% of geocoding attempts failed or returned only broad regional coordinates, reflecting the difficulty of resolving place names described only at district or regional level. Improving extraction prompt specificity is identified as the highest-priority next step. The static environmental layers (modern elevation, current river positions) are an imperfect proxy for past landscapes, particularly for Palaeolithic and Mesolithic sites.</p>
 
   <h3>Resolution and the river valley problem</h3>
   <p>The model operates at 90m raster resolution — roughly one pixel per 700m × 1km at Czech latitudes. Prehistoric settlement frequently clustered in narrow river terrace corridors 200–400m wide. At this resolution, a single pixel averages the terrace with the adjacent valley slope, causing the model to systematically underestimate potential in some of the most archaeologically productive landscapes in Bohemia — including the Elbe (Labe) valley corridor near Litoměřice, the Ohře valley, and parts of the Polabí lowlands. This is a known limitation addressable through higher resolution LiDAR-derived input data, not through parameter adjustment.</p>
@@ -707,7 +717,7 @@
   <p>The model parameters were not adjusted to match known archaeological distributions. Tuning a predictive model toward expected outcomes — however well-intentioned — transforms it from a scientific instrument into a sophisticated redrawing of already-known archaeology. Where the model underperforms relative to known site distributions, this is documented as a data or resolution limitation, not corrected by fitting. This commitment to methodological integrity is especially important given the history of spatially-inflated archaeological claims in Central European scholarship.</p>
 
   <h3>What rigorous validation looks like</h3>
-  <p>The project is committed to spatial cross-validation as the only acceptable validation method. Separate models will be trained per archaeological period and site type. An independent validation set of known sites — withheld from training — will provide the final honest performance assessment.</p>
+  <p>The project uses spatial block cross-validation as the only acceptable validation method — the study area is divided into geographic strips, and the model is tested on regions it has never seen during training. Future iterations will implement per-period models separating Neolithic, Eneolithic, and Bronze Age site distributions, and will use an independent withheld validation set for final performance assessment.</p>
 </section>
 
 <!-- TECH STACK -->
