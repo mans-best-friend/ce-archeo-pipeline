@@ -4,377 +4,422 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Predikce Archeologických Lokalit ve Střední Evropě</title>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #faf8f5;
-    --surface:  #f2ede6;
-    --border:   #ddd6cb;
-    --text:     #1c1a18;
-    --muted:    #6b6158;
-    --accent:   #7a3b1e;
-    --accent-light: #c4856a;
-    --done:     #3d6b3a;
+    --clay: #c4a882;
+    --dark: #1a1612;
+    --mid: #2d2820;
+    --parchment: #f2ead8;
+    --accent: #8b5e3c;
+    --muted: #6b5d4f;
+    --green: #4a6741;
+    --light-clay: #e8d5b7;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.75;
+    background: var(--dark);
+    color: var(--parchment);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
   }
 
-  /* HERO */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
   .hero {
-    padding: 5rem 4rem 4rem;
-    border-bottom: 2px solid var(--text);
-    max-width: 1100px;
-    margin: 0 auto;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 4rem;
+    position: relative;
+    border-bottom: 1px solid rgba(196,168,130,0.2);
+    background: radial-gradient(ellipse at 30% 50%, rgba(139,94,60,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(74,103,65,0.1) 0%, transparent 50%);
   }
 
-  .hero-content { max-width: 780px; }
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 900px;
+  }
 
   .label {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
+    letter-spacing: 0.2em;
+    color: var(--clay);
     text-transform: uppercase;
     margin-bottom: 2rem;
-    font-weight: 400;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
   }
 
   h1 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: 300;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.25rem;
-    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
   }
 
-  h1 em {
-    font-style: normal;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--clay); }
 
   .hero-sub {
-    font-size: 1rem;
-    color: var(--muted);
-    max-width: 580px;
+    font-size: 1.1rem;
     font-weight: 300;
-    line-height: 1.65;
+    color: var(--light-clay);
+    max-width: 600px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+    font-style: italic;
   }
 
   .hero-stats {
     display: flex;
     gap: 3rem;
-    padding-top: 2.5rem;
-    margin-top: 2.5rem;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
+    padding-top: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+    border-top: 1px solid rgba(196,168,130,0.2);
+    margin-top: 3rem;
   }
 
-  .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+  .stat { display: flex; flex-direction: column; gap: 0.3rem; }
 
   .stat-number {
-    font-family: 'Source Serif 4', serif;
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 300;
-    color: var(--accent);
+    color: var(--clay);
     line-height: 1;
   }
 
   .stat-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
-    font-weight: 400;
-  }
-
-  .scroll-hint {
-    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
     letter-spacing: 0.15em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-top: 3rem;
   }
 
-  /* SECTIONS */
+  .scroll-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
   section {
-    padding: 5rem 4rem;
-    border-bottom: 1px solid var(--border);
-    max-width: 1100px;
+    padding: 6rem 4rem;
+    border-bottom: 1px solid rgba(196,168,130,0.1);
+    max-width: 1200px;
     margin: 0 auto;
   }
 
   .section-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--clay);
     text-transform: uppercase;
-    margin-bottom: 2rem;
-    font-weight: 500;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(196,168,130,0.2);
   }
 
   h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
     font-weight: 300;
-    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 2rem;
     line-height: 1.2;
-    color: var(--text);
   }
 
-  h2 em {
-    font-style: normal;
-    color: var(--accent);
-  }
+  h2 em { color: var(--clay); font-style: italic; }
 
   h3 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 2.5rem 0 0.75rem;
-    color: var(--text);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--clay);
+    margin-bottom: 1rem;
+    margin-top: 2rem;
   }
 
-  h4 {
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-    text-transform: uppercase;
+  p {
+    color: var(--light-clay);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    max-width: 720px;
   }
 
-  p { margin-bottom: 1rem; color: var(--text); }
-  p:last-child { margin-bottom: 0; }
-
-  a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2.5rem 0;
-  }
-
-  /* PIPELINE */
   .pipeline {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0;
-    margin: 2.5rem 0;
-    border: 1px solid var(--border);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: rgba(196,168,130,0.1);
+    margin: 3rem 0;
+    border: 1px solid rgba(196,168,130,0.1);
   }
 
   .pipeline-step {
-    padding: 1.75rem 1.5rem;
-    border-right: 1px solid var(--border);
-    background: var(--bg);
+    background: var(--dark);
+    padding: 2rem;
+    transition: background 0.3s;
   }
 
-  .pipeline-step:last-child { border-right: none; }
+  .pipeline-step:hover { background: var(--mid); }
 
   .step-number {
-    font-size: 0.62rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
     letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
+    margin-bottom: 1rem;
   }
 
   .step-title {
-    font-family: 'Source Serif 4', serif;
     font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text);
+    font-weight: 400;
+    color: var(--parchment);
+    margin-bottom: 0.5rem;
   }
 
   .step-desc {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     color: var(--muted);
-    line-height: 1.55;
-    margin-bottom: 0.75rem;
+    font-weight: 300;
+    line-height: 1.5;
+    margin: 0;
   }
 
   .step-tool {
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-    font-weight: 500;
-  }
-
-  /* RESULTS */
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin: 2rem 0;
-  }
-
-  .result-card {
-    padding: 1.75rem 1.5rem;
-    background: var(--bg);
-  }
-
-  .result-number {
-    font-family: 'Source Serif 4', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 0.4rem;
-  }
-
-  .result-label {
-    font-size: 0.72rem;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--clay);
     letter-spacing: 0.1em;
+    margin-top: 1rem;
+    opacity: 0.7;
   }
 
-  /* MAP */
-  .map-result {
+  .code-block {
+    background: var(--mid);
+    border: 1px solid rgba(196,168,130,0.15);
+    border-left: 3px solid var(--clay);
+    padding: 1.5rem 2rem;
     margin: 2rem 0;
-    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--light-clay);
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .code-block .comment { color: var(--muted); }
+  .code-block .command { color: var(--clay); }
+
+  .map-result {
+    margin: 3rem 0;
+    border: 1px solid rgba(196,168,130,0.2);
+    overflow: hidden;
   }
 
   .map-result img {
     width: 100%;
     display: block;
+    filter: sepia(0.2) contrast(1.05);
   }
 
   .map-caption {
-    padding: 0.75rem 1rem;
-    font-size: 0.72rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--mid);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
     color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-top: 1px solid var(--border);
-    background: var(--surface);
+    letter-spacing: 0.1em;
+    border-top: 1px solid rgba(196,168,130,0.1);
   }
 
-  /* METHOD GRID */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: rgba(196,168,130,0.1);
+    border: 1px solid rgba(196,168,130,0.1);
+    margin: 3rem 0;
+  }
+
+  .result-card {
+    background: var(--dark);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .result-number {
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--clay);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
   .method-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin: 2rem 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin: 3rem 0;
   }
 
   .method-block {
-    padding: 1.75rem 1.5rem;
-    background: var(--bg);
+    padding: 2rem;
+    border: 1px solid rgba(196,168,130,0.1);
+    background: var(--mid);
   }
 
   .method-block h4 {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
+    color: var(--clay);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
   }
 
-  .method-block p {
-    font-size: 0.85rem;
+  .method-block p { font-size: 0.9rem; margin: 0; line-height: 1.6; }
+
+  .disclaimer {
+    background: var(--mid);
+    border: 1px solid rgba(196,168,130,0.15);
+    border-left: 3px solid var(--accent);
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+
+  .disclaimer p {
+    font-size: 0.9rem;
+    font-style: italic;
     color: var(--muted);
-    line-height: 1.6;
     margin: 0;
+    max-width: none;
   }
 
-  /* TECH TAGS */
   .tech-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin: 1.25rem 0;
+    margin: 2rem 0;
   }
 
   .tech-tag {
-    padding: 0.3rem 0.75rem;
-    border: 1px solid var(--border);
-    font-size: 0.78rem;
-    color: var(--muted);
-    background: var(--surface);
-    letter-spacing: 0.03em;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(196,168,130,0.3);
+    color: var(--clay);
+    background: transparent;
+    transition: all 0.2s;
   }
 
-  /* DISCLAIMER */
-  .disclaimer {
-    padding: 1.5rem;
-    border-left: 3px solid var(--accent);
-    background: var(--surface);
-    margin: 1.5rem 0;
-  }
+  .tech-tag:hover { background: rgba(196,168,130,0.1); }
 
-  .disclaimer p {
-    font-size: 0.88rem;
-    color: var(--muted);
-    margin: 0;
-  }
-
-  /* CODE BLOCK */
-  .code-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    font-size: 0.82rem;
-    line-height: 1.7;
-    margin: 1.5rem 0;
-    font-family: 'DM Mono', 'Fira Mono', monospace;
-    white-space: pre;
-    overflow-x: auto;
-  }
-
-  .comment { color: var(--muted); }
-  .command { color: var(--accent); font-weight: 500; }
-
-  /* FOOTER */
   footer {
-    padding: 3rem 4rem;
-    border-top: 2px solid var(--text);
-    max-width: 1100px;
-    margin: 0 auto;
+    padding: 4rem;
+    text-align: center;
+    border-top: 1px solid rgba(196,168,130,0.1);
   }
 
   footer p {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     color: var(--muted);
-    margin-bottom: 0.5rem;
+    font-style: italic;
+    max-width: none;
+    margin: 0 auto;
   }
 
-  .mono {
-    font-size: 0.68rem;
+  footer .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
     letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
+    color: var(--clay);
+    margin-top: 1rem;
+    opacity: 0.6;
   }
 
-  /* FADE IN */
-  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
-  .fade-in.visible { opacity: 1; transform: none; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-  /* READING LINE COLOURS */
-  .color-done { color: var(--done) !important; border-color: var(--done) !important; }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
 
-  @media (max-width: 700px) {
-    .hero, section, footer { padding: 3rem 1.5rem; }
-    .pipeline { grid-template-columns: 1fr; }
-    .pipeline-step { border-right: none; border-bottom: 1px solid var(--border); }
-    .pipeline-step:last-child { border-bottom: none; }
-    .hero-stats { gap: 1.5rem; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--clay);
+    margin: 2rem 0;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .hero, section { padding: 3rem 1.5rem; }
+    .hero-stats { flex-wrap: wrap; gap: 2rem; }
+    .method-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2.2rem; }
+  }
+
+  html { background: #1a1612; color-scheme: dark; }
+
+  @media (prefers-color-scheme: light) {
+    html, body { background: #1a1612 !important; color: #f2ead8 !important; }
+  }
+
+  @media (max-width: 768px) {
+    body { background: #1a1612 !important; -webkit-text-size-adjust: 100%; }
+    p { color: #e8d5b7 !important; }
+    .step-desc { color: #9a8878 !important; }
+    .result-label, .stat-label, .map-caption { color: #9a8878 !important; }
+    .disclaimer p { color: #9a8878 !important; font-size: 1rem !important; }
+    .scroll-hint { color: #9a8878 !important; }
   }
 </style>
 </head>
@@ -509,7 +554,7 @@
 
   <div class="map-result">
     <img src="map_screenshot.jpg" alt="Pravděpodobnostní mapa potenciálu archeologických lokalit ve Střední Evropě" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    <div style="display:none; padding:4rem; text-align:center; background:var(--surface); color:var(--muted); font-family:monospace; font-size:0.75rem;">[ map_screenshot.jpg ]</div>
+    <div style="display:none; padding:4rem; text-align:center; background:var(--mid); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.75rem;">[ map_screenshot.jpg ]</div>
     <div class="map-caption">OBRÁZEK 1 — Pravděpodobnostní mapa · 169 tréninkových lokalit · Prostorové CV AUC 0.756 · SRTM + sklon + aspekt + OSM voda + BPEJ půda · Vytvořeno v QGIS</div>
   </div>
 
@@ -606,11 +651,11 @@
 
   <h3>Environmentální proměnné</h3>
   <div class="tech-list">
-    <span class="tech-tag" class="color-done">✓ Nadmořská výška (SRTM 90m) — 27,2 %</span>
-    <span class="tech-tag" class="color-done">✓ Sklon terénu — 25,3 %</span>
-    <span class="tech-tag" class="color-done">✓ Orientace svahu — 25,4 %</span>
-    <span class="tech-tag" class="color-done">✓ Vzdálenost od vody (OSM) — 16,4 %</span>
-    <span class="tech-tag" class="color-done">✓ Vhodnost půdy (BPEJ) — 5,7 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Nadmořská výška (SRTM 90m) — 27,2 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Sklon terénu — 25,3 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Orientace svahu — 25,4 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Vzdálenost od vody (OSM) — 16,4 %</span>
+    <span class="tech-tag" style="border-color:var(--green);color:var(--green);">✓ Vhodnost půdy (BPEJ) — 5,7 %</span>
     <span class="tech-tag">Data z LiDARu (ČÚZK)</span>
     <span class="tech-tag">Úplné rozšíření spraše</span>
     <span class="tech-tag">Blízkost surovin</span>
