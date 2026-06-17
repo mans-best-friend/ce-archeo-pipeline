@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Predikce archeologických lokalit — Prezentace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #f9f6f0;
+    --surface: #f0ebe1;
+    --border:  #d9d2c5;
+    --text:    #1a1815;
+    --muted:   #6b6158;
+    --accent:  #7a3b1e;
+    --green:   #4a6741;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 2rem 1.5rem;
+  }
+
+  .slide {
+    max-width: 860px;
+    margin: 2rem auto;
+    background: white;
+    border: 1px solid var(--border);
+    padding: 3.5rem 4rem;
+    border-radius: 2px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--border);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--accent);
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 1.75rem 0 0.6rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .meta {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .meta-sep { color: var(--border); }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  ul {
+    margin: 1rem 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.6rem 0 0.6rem 1.5rem;
+    position: relative;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(217,210,197,0.5);
+  }
+
+  li:last-child { border-bottom: none; }
+
+  li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .big-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    color: var(--accent);
+    line-height: 1;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+  }
+
+  .big-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .stat-cell {
+    padding: 1.5rem 1.25rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .stat-cell:last-child { border-right: none; }
+
+  .stat-n {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-l {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .callout strong { color: var(--accent); }
+
+  .callout.green {
+    border-color: var(--green);
+    background: rgba(74,103,65,0.06);
+  }
+
+  .callout.green strong { color: var(--green); }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1.5rem 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border);
+    font-size: 0.74rem;
+    color: var(--muted);
+    background: var(--surface);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .pipeline-mini {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .pipe-step {
+    padding: 1.25rem 1rem;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .pipe-step:last-child { border-right: none; }
+
+  .pipe-n {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+
+  .pipe-t {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+
+  .pipe-d {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .cv-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    margin: 1rem 0;
+  }
+
+  .cv-cell {
+    padding: 0.75rem 0.5rem;
+    background: rgba(122,59,30,0.07);
+    border: 1px solid rgba(122,59,30,0.15);
+    text-align: center;
+    border-radius: 1px;
+  }
+
+  .cv-n { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--accent); line-height: 1; }
+  .cv-l { font-size: 0.62rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .importance-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .imp-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    min-width: 14rem;
+  }
+
+  .imp-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .imp-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .imp-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  .footer-slide {
+    max-width: 860px;
+    margin: 2rem auto 4rem;
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .footer-slide a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 680px) {
+    .slide { padding: 2rem 1.5rem; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .pipeline-mini { grid-template-columns: 1fr; }
+    .cv-row { grid-template-columns: repeat(3, 1fr); }
+    h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1 — TITULNÍ -->
+<div class="slide">
+  <div class="slide-number">01 / 07</div>
+  <h1>Predikce neobjevených<br>archeologických lokalit</h1>
+  <p class="subtitle">Open-source vícejazyčný pipeline využívající LLM a strojové učení<br>pro predikci pravěkého osídlení ve Střední Evropě</p>
+  <div class="meta">
+    <span class="meta-item">Osobní výzkumný projekt</span>
+    <span class="meta-sep">·</span>
+    <span class="meta-item">2025–2026</span>
+    <span class="meta-sep">·</span>
+    <span class="meta-item">v1.1</span>
+    <span class="meta-sep">·</span>
+    <span class="meta-item">Open source</span>
+  </div>
+</div>
+
+<!-- SLIDE 2 — PROBLÉM -->
+<div class="slide">
+  <div class="slide-number">02 / 07</div>
+  <h2>Problém</h2>
+  <p>Ve střední Evropě zůstává velká část kvalitních archeologických dat <strong>jazykově uzavřená</strong> před výpočetními metodami.</p>
+  <ul>
+    <li>Nálezové zprávy, regionální studie a katalogy lokalit jsou převážně v češtině, slovenštině, němčině, polštině, maďarštině a rumunštině</li>
+    <li>Tato data chybí v mezinárodních databázích a anglicky trénovaných modelech</li>
+    <li>Výsledkem je zkreslený obraz pravěkého osídlení středoevropského regionu</li>
+    <li>Existující prediktivní modely proto pracují s neúplnými vstupními daty</li>
+  </ul>
+  <div class="callout">
+    <strong>Klíčová otázka:</strong> Lze automaticky extrahovat strukturovaná data z vícejazyčné odborné literatury a vybudovat na nich věrohodný prediktivní prostorový model?
+  </div>
+</div>
+
+<!-- SLIDE 3 — ŘEŠENÍ / PIPELINE -->
+<div class="slide">
+  <div class="slide-number">03 / 07</div>
+  <h2>Řešení</h2>
+  <p>Plně lokální a automatizovaná pipeline v pěti krocích:</p>
+
+  <div class="pipeline-mini">
+    <div class="pipe-step">
+      <div class="pipe-n">00</div>
+      <div class="pipe-t">Přejmenování PDF</div>
+      <div class="pipe-d">Bibliografická metadata přes LLM</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-n">01</div>
+      <div class="pipe-t">Extrakce lokalit</div>
+      <div class="pipe-d">Strukturovaná data v 6 jazycích</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-n">02</div>
+      <div class="pipe-t">Geokódování</div>
+      <div class="pipe-d">Text → souřadnice přes Nominatim</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-n">03</div>
+      <div class="pipe-t">Export QGIS</div>
+      <div class="pipe-d">GeoPackage + GeoJSON</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-n">04</div>
+      <div class="pipe-t">Prediktivní model</div>
+      <div class="pipe-d">Random Forest → pravděpodobnostní plocha</div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-cell">
+      <div class="stat-n">597</div>
+      <div class="stat-l">Zdrojových PDF</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">281</div>
+      <div class="stat-l">Zpracovaných článků</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">3 011</div>
+      <div class="stat-l">Geokódovaných lokalit</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">6</div>
+      <div class="stat-l">Jazyků</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4 — KLÍČOVÉ VÝSLEDKY -->
+<div class="slide">
+  <div class="slide-number">04 / 07</div>
+  <h2>Klíčové výsledky</h2>
+
+  <div class="big-number">0.756</div>
+  <div class="big-label">Prostorová bloková křížová validace (AUC)</div>
+
+  <h3>Důležitost příznaků</h3>
+  <div style="margin: 1rem 0 1.5rem;">
+    <div class="importance-bar">
+      <span class="imp-label">Nadmořská výška (SRTM 90m)</span>
+      <div class="imp-track"><div class="imp-fill" style="width: 27.2%"></div></div>
+      <span class="imp-val">27,2 %</span>
+    </div>
+    <div class="importance-bar">
+      <span class="imp-label">Orientace svahu</span>
+      <div class="imp-track"><div class="imp-fill" style="width: 25.4%"></div></div>
+      <span class="imp-val">25,4 %</span>
+    </div>
+    <div class="importance-bar">
+      <span class="imp-label">Sklon terénu</span>
+      <div class="imp-track"><div class="imp-fill" style="width: 25.3%"></div></div>
+      <span class="imp-val">25,3 %</span>
+    </div>
+    <div class="importance-bar">
+      <span class="imp-label">Vzdálenost od vody (OSM)</span>
+      <div class="imp-track"><div class="imp-fill" style="width: 16.4%"></div></div>
+      <span class="imp-val">16,4 %</span>
+    </div>
+    <div class="importance-bar">
+      <span class="imp-label">Vhodnost půdy (BPEJ)</span>
+      <div class="imp-track"><div class="imp-fill" style="width: 5.7%"></div></div>
+      <span class="imp-val">5,7 %</span>
+    </div>
+  </div>
+
+  <h3>Výsledky bloků prostorové CV</h3>
+  <div class="cv-row">
+    <div class="cv-cell"><div class="cv-n">0,620</div><div class="cv-l">Blok 1<br>Z Čechy · 18</div></div>
+    <div class="cv-cell"><div class="cv-n">0,685</div><div class="cv-l">Blok 2<br>S Čechy · 84</div></div>
+    <div class="cv-cell"><div class="cv-n">0,671</div><div class="cv-l">Blok 3<br>Morava · 30</div></div>
+    <div class="cv-cell"><div class="cv-n">0,805</div><div class="cv-l">Blok 4<br>Z Slovensko · 24</div></div>
+    <div class="cv-cell" style="background: rgba(122,59,30,0.15);"><div class="cv-n">1,000</div><div class="cv-l">Blok 5 ⚠<br>V Slovensko · 13</div></div>
+  </div>
+
+  <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0.75rem;">Model: Random Forest · 200 stromů · 169 tréninkových lokalit · 1 000 bodů pozadí</p>
+</div>
+
+<!-- SLIDE 5 — METODOLOGICKÁ INTEGRITA -->
+<div class="slide">
+  <div class="slide-number">05 / 07</div>
+  <h2>Metodologická integrita</h2>
+
+  <div class="callout">
+    <strong>Prostorová bloková křížová validace — CV AUC 0,756</strong> — Studované území je rozděleno na pět geografických pásů; model je testován vždy na jiném pásu, přičemž na zbývajících čtyřech je trénován. Tím je vynucena skutečná geografická mezera mezi tréninkovými a testovacími daty. Pro model trénovaný na automaticky extrahovaných datech ze šesti jazyků a čtyř zemí jde o solidní výsledek.
+  </div>
+
+  <h3>Co model je — a co není</h3>
+  <ul>
+    <li>Výstup je <strong>relativní pravděpodobnostní plocha</strong>, ne potvrzené polohy lokalit</li>
+    <li>Parametry nebyly přizpůsobovány tak, aby odpovídaly očekávaným distribucím</li>
+    <li>Přibližně 49 % geokódovacích pokusů selhalo — dokumentováno jako omezení, ne skryto</li>
+    <li>Rozlišení 90 m podceňuje potenciál úzkých říčních teras (Labe, Ohře, Polabí)</li>
+  </ul>
+
+  <div class="callout green">
+    <strong>Plánovaná validace:</strong> Integrace databáze AMČR jako nezávislé validační sady. Samostatné modely pro každé období (neolit, eneolit, doba bronzová). LiDAR DMR5G z ČÚZK pro vyšší rozlišení.
+  </div>
+</div>
+
+<!-- SLIDE 6 — UNIKÁTNÍ PŘÍNOS -->
+<div class="slide">
+  <div class="slide-number">06 / 07</div>
+  <h2>Unikátní přínos</h2>
+
+  <div class="callout" style="font-size: 1.05rem; padding: 1.5rem 1.75rem;">
+    <strong>Jde o první systematický vícejazyčný přístup tohoto druhu ve výpočetní archeologii středoevropského regionu.</strong> Žádný jiný známý projekt nezpracovává moderní středoevropskou odbornou literaturu v šesti jazycích, nevytváří z ní strukturovanou databázi a nebuduje na ní prediktivní model.
+  </div>
+
+  <h3>Relevance pro praxi</h3>
+  <ul>
+    <li>Pomoc při plánování záchranného archeologického výzkumu — identifikace vysoce perspektivních ploch</li>
+    <li>Cílená prospekce a efektivnější alokace terénních kapacit</li>
+    <li>Základ pro specializované modely podle období, kultury nebo regionu</li>
+    <li>Plně transparentní, open-source a lokálně běžící — žádná závislost na komerčních API</li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">Python 3.13</span>
+    <span class="tag">Mistral 7B Instruct</span>
+    <span class="tag">Random Forest</span>
+    <span class="tag">SRTM · OSM · BPEJ</span>
+    <span class="tag">QGIS 3.34</span>
+    <span class="tag">Apple M1 16 GB</span>
+  </div>
+</div>
+
+<!-- SLIDE 7 — ZÁVĚR / KONTAKT -->
+<div class="slide">
+  <div class="slide-number">07 / 07</div>
+  <h2>Děkuji za pozornost</h2>
+  <p>Rád odpovím na jakékoli otázky — k metodologii, implementaci i plánovanému dalšímu vývoji.</p>
+
+  <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border);">
+    <div style="padding: 1.5rem; background: var(--bg);">
+      <div style="font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem;">Kód a dokumentace</div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--accent);">github.com/mans-best-friend/<br>ce-archeo-pipeline</div>
+    </div>
+    <div style="padding: 1.5rem; background: var(--bg);">
+      <div style="font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem;">Stav projektu</div>
+      <div style="font-size: 0.88rem; color: var(--text);">Aktivní vývoj · v1.1<br>Výsledky jsou předběžné</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+    <h3 style="margin-top: 0;">Plánované další kroky</h3>
+    <ul>
+      <li>Zlepšení geokódování — extrakce na úrovni obcí (cíl: 49 % → &lt;20 % chybovost)</li>
+      <li>Integrace LiDAR DMR5G z ČÚZK pro rozlišení 1 m</li>
+      <li>OCR pipeline pro 185 naskenovaných historických časopisů</li>
+      <li>Validace pomocí databáze AMČR</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-slide">
+  <p>Predikce archeologických lokalit ve Střední Evropě · v1.1 · 2026</p>
+  <p style="margin-top: 0.5rem;"><a href="https://github.com/mans-best-friend/ce-archeo-pipeline">github.com/mans-best-friend/ce-archeo-pipeline</a></p>
+</div>
+
+</body>
+</html>

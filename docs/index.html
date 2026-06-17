@@ -1,718 +1,349 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CE Archaeological Site Prediction Pipeline</title>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Generátor Sedláčka</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap');
+
   :root {
-    --bg:       #faf8f5;
-    --surface:  #f2ede6;
-    --border:   #ddd6cb;
-    --text:     #1c1a18;
-    --muted:    #6b6158;
-    --accent:   #7a3b1e;
-    --accent-light: #c4856a;
-    --done:     #3d6b3a;
+    --black: #0a0a0a;
+    --accent: #00dcc8;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.75;
-  }
-
-  /* HERO */
-  .hero {
-    padding: 5rem 4rem 4rem;
-    border-bottom: 2px solid var(--text);
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .hero-content { max-width: 780px; }
-
-  .label {
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-    font-weight: 400;
-  }
-
-  h1 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: clamp(2rem, 5vw, 3.6rem);
-    font-weight: 300;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.25rem;
-    color: var(--text);
-  }
-
-  h1 em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    font-size: 1rem;
-    color: var(--muted);
-    max-width: 580px;
-    font-weight: 300;
-    line-height: 1.65;
-  }
-
-  .hero-stats {
+    background: var(--black);
+    color: #f0f0f0;
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
     display: flex;
-    gap: 3rem;
-    padding-top: 2.5rem;
-    margin-top: 2.5rem;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    background-image:
+      radial-gradient(ellipse at 10% 0%, rgba(0,181,163,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(0,181,163,0.08) 0%, transparent 50%);
   }
 
-  .stat { display: flex; flex-direction: column; gap: 0.2rem; }
-
-  .stat-number {
-    font-family: 'Source Serif 4', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
-    font-weight: 400;
-  }
-
-  .scroll-hint {
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-top: 3rem;
-  }
-
-  /* SECTIONS */
-  section {
-    padding: 5rem 4rem;
-    border-bottom: 1px solid var(--border);
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-    font-weight: 500;
-  }
-
-  h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    font-weight: 300;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-    color: var(--text);
-  }
-
-  h2 em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  h3 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 2.5rem 0 0.75rem;
-    color: var(--text);
-  }
-
-  h4 {
-    font-size: 0.85rem;
-    font-weight: 500;
+  header { text-align: center; margin-bottom: 40px; }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
     letter-spacing: 0.04em;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-    text-transform: uppercase;
-  }
-
-  p { margin-bottom: 1rem; color: var(--text); }
-  p:last-child { margin-bottom: 0; }
-
-  a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2.5rem 0;
-  }
-
-  /* PIPELINE */
-  .pipeline {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0;
-    margin: 2.5rem 0;
-    border: 1px solid var(--border);
-  }
-
-  .pipeline-step {
-    padding: 1.75rem 1.5rem;
-    border-right: 1px solid var(--border);
-    background: var(--bg);
-  }
-
-  .pipeline-step:last-child { border-right: none; }
-
-  .step-number {
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-  }
-
-  .step-title {
-    font-family: 'Source Serif 4', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text);
-  }
-
-  .step-desc {
-    font-size: 0.82rem;
-    color: var(--muted);
-    line-height: 1.55;
-    margin-bottom: 0.75rem;
-  }
-
-  .step-tool {
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-    font-weight: 500;
-  }
-
-  /* RESULTS */
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin: 2rem 0;
-  }
-
-  .result-card {
-    padding: 1.75rem 1.5rem;
-    background: var(--bg);
-  }
-
-  .result-number {
-    font-family: 'Source Serif 4', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--accent);
+    color: #fff;
     line-height: 1;
-    margin-bottom: 0.4rem;
   }
+  header h1 span { color: var(--accent); }
+  header p { margin-top: 10px; color: #888; font-size: 0.95rem; }
 
-  .result-label {
-    font-size: 0.72rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  /* MAP */
-  .map-result {
-    margin: 2rem 0;
-    border: 1px solid var(--border);
-  }
-
-  .map-result img {
+  .layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
     width: 100%;
-    display: block;
+    max-width: 960px;
   }
 
-  .map-caption {
-    padding: 0.75rem 1rem;
-    font-size: 0.72rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-top: 1px solid var(--border);
-    background: var(--surface);
+  /* EDITOR */
+  .editor {
+    flex: 1 1 300px;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  /* METHOD GRID */
-  .method-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin: 2rem 0;
-  }
-
-  .method-block {
-    padding: 1.75rem 1.5rem;
-    background: var(--bg);
-  }
-
-  .method-block h4 {
+  label {
     font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 0.6rem;
+    display: block;
+    margin-bottom: 6px;
   }
 
-  .method-block p {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin: 0;
-  }
+  .field { display: flex; flex-direction: column; }
 
-  /* TECH TAGS */
-  .tech-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1.25rem 0;
+  input[type="text"], textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    padding: 10px 14px;
+    transition: border-color 0.2s;
+    outline: none;
+    resize: none;
   }
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--accent);
+    background: rgba(0,220,200,0.05);
+  }
+  textarea { min-height: 130px; line-height: 1.5; }
 
-  .tech-tag {
-    padding: 0.3rem 0.75rem;
-    border: 1px solid var(--border);
-    font-size: 0.78rem;
-    color: var(--muted);
-    background: var(--surface);
+  .char-count { text-align: right; font-size: 0.75rem; color: #666; margin-top: 4px; }
+  .char-count.warn { color: #f0a500; }
+  .char-count.over { color: #e05050; }
+
+  .btn-row { display: flex; gap: 10px; }
+
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    padding: 11px 20px;
+    transition: all 0.18s;
+  }
+  .btn-primary { background: var(--accent); color: #000; flex: 1; }
+  .btn-primary:hover { background: #00f0d8; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #aaa; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+  .btn-random {
+    background: transparent;
+    border: 1px solid rgba(0,220,200,0.3);
+    color: var(--accent);
+    font-size: 0.82rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
     letter-spacing: 0.03em;
   }
+  .btn-random:hover { background: rgba(0,220,200,0.08); border-color: var(--accent); }
 
-  /* DISCLAIMER */
-  .disclaimer {
-    padding: 1.5rem;
-    border-left: 3px solid var(--accent);
-    background: var(--surface);
-    margin: 1.5rem 0;
+  .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+
+  /* CARD — square photo, caption inside */
+  .preview-wrap {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
   }
 
-  .disclaimer p {
-    font-size: 0.88rem;
-    color: var(--muted);
-    margin: 0;
+  .card {
+    width: 340px;
+    background: #111;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+    font-family: 'Source Sans 3', sans-serif;
   }
 
-  /* CODE BLOCK */
-  .code-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    font-size: 0.82rem;
-    line-height: 1.7;
-    margin: 1.5rem 0;
-    font-family: 'DM Mono', 'Fira Mono', monospace;
-    white-space: pre;
-    overflow-x: auto;
+  /* Strict square photo container */
+  .card-photo-wrap {
+    width: 340px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    background: #000;
   }
 
-  .comment { color: var(--muted); }
-  .command { color: var(--accent); font-weight: 500; }
-
-  /* FOOTER */
-  footer {
-    padding: 3rem 4rem;
-    border-top: 2px solid var(--text);
-    max-width: 1100px;
-    margin: 0 auto;
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    inset: 0;
   }
 
-  footer p {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
+  .card {
+    isolation: isolate;
   }
 
-  .mono {
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
+  .card-caption {
+    background: #0f0f0f;
+    padding: 16px 18px 20px;
   }
+  .caption-name { font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 6px; }
+  .caption-text { font-size: 1rem; line-height: 1.5; color: #e8e8e8; word-break: break-word; white-space: pre-wrap; }
 
-  /* FADE IN */
-  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
-  .fade-in.visible { opacity: 1; transform: none; }
+  .hint { font-size: 0.78rem; color: #555; text-align: center; letter-spacing: 0.04em; }
 
-  /* READING LINE COLOURS */
-  .color-done { color: var(--done) !important; border-color: var(--done) !important; }
-
-  @media (max-width: 700px) {
-    .hero, section, footer { padding: 3rem 1.5rem; }
-    .pipeline { grid-template-columns: 1fr; }
-    .pipeline-step { border-right: none; border-bottom: 1px solid var(--border); }
-    .pipeline-step:last-child { border-bottom: none; }
-    .hero-stats { gap: 1.5rem; }
-  }
+  footer { margin-top: 52px; color: #3a3a3a; font-size: 0.78rem; letter-spacing: 0.05em; text-align: center; }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-content">
-    <div class="label">Central European Archaeology · Computational Methods · v1.0</div>
-    <h1>Predicting <em>Undiscovered</em><br>Archaeological Sites</h1>
-    <p class="hero-sub">An open-source pipeline for extracting, geocoding, and spatially modelling prehistoric settlement data from multilingual Central European literature.</p>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number">597</span>
-        <span class="stat-label">Source PDFs</span>
+<header>
+  <h1>Generátor <span>Sedláčka</span></h1>
+  <p>Samoobslužný nástroj pro oběti vysoké inteligence</p>
+</header>
+
+<div class="layout">
+
+  <div class="editor">
+    <div class="field">
+      <label>Jméno / název</label>
+      <input type="text" id="nameInput" maxlength="40" value="Sedláček" placeholder="Kdo to říká?">
+    </div>
+    <div class="field">
+      <label>Výrok</label>
+      <textarea id="quoteInput" maxlength="220" placeholder="Vložte svůj výrok..."></textarea>
+      <div class="char-count" id="charCount">0 / 220</div>
+    </div>
+    <div class="divider"></div>
+    <button class="btn-random" id="randomBtn">🎲 Náhodný výrok</button>
+    <div class="btn-row">
+      <button class="btn-primary" id="copyBtn">💾 Stáhnout PNG</button>
+      <button class="btn-ghost" id="clearBtn">Smazat</button>
+    </div>
+    <div id="statusMsg" style="font-size:0.82rem;color:#888;text-align:center;min-height:1.2em;"></div>
+  </div>
+
+  <div class="preview-wrap">
+    <div class="card" id="memeCard">
+      <div class="card-photo-wrap">
+        <img
+          class="card-photo"
+          id="cardPhoto"
+          src="sedlacek.jpg"
+          alt="Sedláček"
+          crossorigin="anonymous"
+        >
       </div>
-      <div class="stat">
-        <span class="stat-number">281</span>
-        <span class="stat-label">Processed papers</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">3,011</span>
-        <span class="stat-label">Sites geocoded</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">6</span>
-        <span class="stat-label">Languages</span>
+      <div class="card-caption">
+        <div class="caption-name" id="previewName">Sedláček:</div>
+        <div class="caption-text" id="previewQuote">Jsem obětí své vysoké inteligence. Pražská kavárna prostě nechápe, že rozumím Václavu Havlovi víc než Václav Havel samotný.</div>
       </div>
     </div>
+    <div class="hint">náhled • sdílejte screenshot</div>
   </div>
-  <div class="scroll-hint">↓ Scroll to explore</div>
+
 </div>
 
-
-<!-- ABSTRACT -->
-<section class="fade-in">
-  <div class="section-label">Abstract</div>
-  <h2>A computational approach to <em>prehistoric site prediction</em></h2>
-  <p>Predictive modelling of undiscovered archaeological sites in Central Europe has historically been constrained by the language barrier of the regional literature — the majority of primary excavation reports, site catalogues, and synthesis papers are written in Czech, Slovak, German, Polish, Hungarian, and Romanian, and remain largely absent from English-language computational databases. This project addresses that gap with an automated pipeline that processes multilingual PDFs using a locally-run large language model (Mistral 7B Instruct), extracts structured site data — name, period, type, and location — and geocodes the results to geographic coordinates.</p>
-  <p>The extracted and geocoded site corpus serves as training data for a Random Forest classifier that learns the environmental signature of prehistoric settlement from five real-data layers: SRTM-derived elevation, slope, and aspect at 90m resolution; distance to waterways computed from OpenStreetMap data; and soil favourability derived from the Czech BPEJ classification at 1:5000 scale. Model performance is assessed using spatial block cross-validation — the study area is divided into five longitudinal geographic strips and the model is tested on each strip in turn, ensuring no spatial autocorrelation between training and test data. The resulting probability surface achieves a spatial CV AUC of 0.756 across Czech and Slovak territory, correctly identifying lowland agricultural zones as high-probability settlement areas while penalising mountain ranges and steep terrain.</p>
-  <p>All components run locally on consumer hardware using exclusively free and open-source tools. The full pipeline, trained model, and bilingual documentation are available at <a href="https://github.com/mans-best-friend/ce-archeo-pipeline" style="color:var(--clay);">github.com/mans-best-friend/ce-archeo-pipeline</a>.</p>
-</section>
-
-<!-- WHAT IS THIS -->
-<section class="fade-in">
-  <div class="section-label">Overview</div>
-  <h2>What is this <em>project?</em></h2>
-  <p>This is a proof-of-concept computational pipeline that automatically extracts archaeological site data from academic literature, geocodes the locations, and feeds the results into a predictive spatial model — identifying areas likely to contain undiscovered prehistoric sites in Central Europe.</p>
-  <p>The project processes papers written in Czech, Slovak, German, Polish, Hungarian, and Romanian — languages largely absent from existing English-language archaeological databases. This multilingual approach is its core original contribution.</p>
-  <div class="divider"></div>
-  <p>Built entirely with free, open-source tools running locally on a personal computer. No institutional funding, no proprietary software, no API costs.</p>
-</section>
-
-<!-- PIPELINE -->
-<section class="fade-in">
-  <div class="section-label">Method</div>
-  <h2>The <em>Pipeline</em></h2>
-  <p>Five automated steps transform a folder of academic PDFs into a probability heatmap overlaid on a map of Central Europe.</p>
-
-  <div class="pipeline">
-    <div class="pipeline-step">
-      <div class="step-number">STEP 00</div>
-      <div class="step-title">PDF Renaming</div>
-      <p class="step-desc">597 PDFs with cryptic filenames automatically renamed using LLM-extracted bibliographic metadata.</p>
-      <div class="step-tool">PyMuPDF · Mistral 7B</div>
-    </div>
-    <div class="pipeline-step">
-      <div class="step-number">STEP 01</div>
-      <div class="step-title">Site Extraction</div>
-      <p class="step-desc">Each paper is chunked and fed to a local language model which extracts structured site data — name, period, type, location, finds.</p>
-      <div class="step-tool">Mistral 7B Instruct · LM Studio</div>
-    </div>
-    <div class="pipeline-step">
-      <div class="step-number">STEP 02</div>
-      <div class="step-title">Geocoding</div>
-      <p class="step-desc">Location descriptions are resolved to coordinates using the Nominatim geocoder. Sites outside the CE bounding box are automatically filtered.</p>
-      <div class="step-tool">Nominatim · OpenStreetMap</div>
-    </div>
-    <div class="pipeline-step">
-      <div class="step-number">STEP 03</div>
-      <div class="step-title">QGIS Export</div>
-      <p class="step-desc">Geocoded sites exported as GeoPackage and GeoJSON for visualisation and manual review in QGIS.</p>
-      <div class="step-tool">GeoPandas · QGIS</div>
-    </div>
-    <div class="pipeline-step">
-      <div class="step-number">STEP 04</div>
-      <div class="step-title">Predictive Model</div>
-      <p class="step-desc">Random Forest classifier trained on known site locations with environmental covariates generates a probability heatmap.</p>
-      <div class="step-tool">scikit-learn · GDAL · numpy</div>
-    </div>
-  </div>
-</section>
-
-<!-- FIRST RESULTS -->
-<section class="fade-in">
-  <div class="section-label">Results · Full Corpus Run</div>
-  <h2>Results from the <em>full corpus run</em></h2>
-  <p>The following results were generated from the full corpus run — 281 papers processed, yielding 3,011 geocoded sites of which 169 high and medium confidence sites were used for model training.</p>
-
-  <div class="results-grid">
-    <div class="result-card">
-      <div class="result-number">3,011</div>
-      <div class="result-label">Site mentions extracted</div>
-    </div>
-    <div class="result-card">
-      <div class="result-number">432</div>
-      <div class="result-label">Named sites</div>
-    </div>
-    <div class="result-card">
-      <div class="result-number">76</div>
-      <div class="result-label">High confidence geocodes</div>
-    </div>
-    <div class="result-card">
-      <div class="result-number">454</div>
-      <div class="result-label">Czech Republic sites</div>
-    </div>
-    <div class="result-card">
-      <div class="result-number">106</div>
-      <div class="result-label">Neolithic period sites</div>
-    </div>
-    <div class="result-card">
-      <div class="result-number">6</div>
-      <div class="result-label">Countries represented</div>
-    </div>
-  </div>
-
-  <h3>Period breakdown</h3>
-  <p>Multiple archaeological periods are represented across the full corpus: Neolithic (106 sites), Middle Bronze Age (42), Bell Beaker (17), LBK/Linearbandkeramik (18), Eneolithic (31), Palaeolithic (8), and others.</p>
-
-  <h3>Probability heatmap — first real result</h3>
-  <p>The map below shows the model's output after training on 169 known sites using four real environmental layers. Known site locations (white circles) are overlaid on the probability surface.</p>
-
-  <div class="map-result">
-    <img src="map_screenshot.jpg" alt="Probability heatmap of archaeological site potential across Central Europe" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    <div style="display:none; padding:4rem; text-align:center; background:var(--surface); color:var(--muted); font-family:monospace; font-size:0.75rem;">[ map_screenshot.jpg ]</div>
-    <div class="map-caption">FIGURE 1 — Probability heatmap · 169 training sites · Spatial CV AUC 0.756 · SRTM elevation + slope + aspect + OSM water + BPEJ soil · Generated with QGIS</div>
-  </div>
-
-  <div style="margin-top:2rem;">
-    <h3>Reading the map</h3>
-    <ul style="list-style:none; padding:0; display:grid; gap:0.75rem; margin-top:1rem;">
-      <li style="padding:1rem 1.25rem; background:rgba(139,94,60,0.15); border-left:3px solid var(--accent);">
-        <strong>Dark red / orange</strong> — High probability. Terrain that closely matches the environmental signature of known archaeological sites: moderate elevation, gentle slope, proximity to water. The Bohemian plateau and Moravian lowlands dominate this zone.
-      </li>
-      <li style="padding:1rem 1.25rem; background:rgba(74,103,65,0.15); border-left:3px solid var(--green);">
-        <strong>Green / teal</strong> — Moderate probability. Transitional terrain — higher or steeper than preferred, or further from water, but not excluded.
-      </li>
-      <li style="padding:1rem 1.25rem; background:rgba(30,60,120,0.15); border-left:3px solid #4a7aad;">
-        <strong>Blue</strong> — Low probability. The Alps (southwest), Ore Mountains, Sudetes, and Carpathians are correctly penalised as unfavourable for prehistoric settlement.
-      </li>
-      <li style="padding:1rem 1.25rem; background:rgba(196,168,130,0.1); border-left:3px solid var(--clay);">
-        <strong>White circles</strong> — Known archaeological sites from the extracted corpus. Their concentration within the high-probability zone provides informal visual validation that the model learned a meaningful pattern.
-      </li>
-    </ul>
-    <p style="margin-top:1.25rem; font-size:0.9em; color:var(--muted);">Spatial block CV AUC: <strong style="color:var(--clay);">0.756 ± 0.136</strong> — Feature importances: elevation 27.2% · slope 25.3% · aspect 25.4% · distance to water 16.4% · soil 5.7%</p>
-
-    <div style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(196,168,130,0.08); border-left:3px solid var(--clay); font-size:0.88em; color:var(--muted);">
-      <strong style="color:var(--clay);">Why 0.756, not 0.861</strong> — An earlier run using random cross-validation produced an AUC of 0.861. That number was inflated by spatial autocorrelation: nearby sites share similar environmental characteristics, so randomly assigned test points had effectively been "seen" during training. Proper spatial block validation divides the study area into five geographic strips from west to east and tests each strip on a model trained entirely on the remaining four. This enforces a genuine geographic gap and produces the honest score of 0.756. The lower number is more defensible precisely because it was obtained correctly.
-      <div style="margin-top:0.75rem; display:grid; grid-template-columns: repeat(5, 1fr); gap:0.5rem; text-align:center;">
-        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Block 1</div><div style="color:var(--parchment);">0.620</div><div style="font-size:0.8em;">W Bohemia · 18 sites</div></div>
-        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Block 2</div><div style="color:var(--parchment);">0.685</div><div style="font-size:0.8em;">C Bohemia · 84 sites</div></div>
-        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Block 3</div><div style="color:var(--parchment);">0.671</div><div style="font-size:0.8em;">Moravia · 30 sites</div></div>
-        <div style="padding:0.5rem; background:rgba(139,94,60,0.15); border-radius:4px;"><div style="font-size:0.9em;">Block 4</div><div style="color:var(--parchment);">0.805</div><div style="font-size:0.8em;">W Slovakia · 24 sites</div></div>
-        <div style="padding:0.5rem; background:rgba(139,94,60,0.2); border-radius:4px;"><div style="font-size:0.9em;">Block 5 ⚠</div><div style="color:var(--parchment);">1.000</div><div style="font-size:0.8em;">E Slovakia · 13 sites</div></div>
-      </div>
-      <p style="margin-top:0.75rem; font-size:0.85em;">Block 5 at 1.000 with only 13 test sites is a statistical artefact — a perfect score from too few data points, not a genuine result. The high variance (±0.136) reflects uneven model performance across regions, which is itself an informative finding.</p>
-    </div>
-
-    <p style="margin-top:1rem; font-size:0.88em; color:var(--muted); border-top:1px solid rgba(196,168,130,0.15); padding-top:1rem;"><strong style="color:var(--clay);">What is AUC?</strong> The model scores every location from 0 to 1. AUC (Area Under the ROC Curve) measures how reliably it ranks a real site above a random non-site location — across every possible score threshold at once. An AUC of 0.5 means the model is no better than chance; 1.0 is perfect. A score of <strong style="color:var(--clay);">0.756</strong> means that in 75.6% of random comparisons, the model correctly scores a known site higher than a non-site. The ±0.012 shows this result is stable across five independent geographic folds.</p>
-  </div>
-</section>
-
-<!-- METHODOLOGY -->
-<section class="fade-in">
-  <div class="section-label">Methodology</div>
-  <h2>How the <em>model works</em></h2>
-  <p>The predictive model answers one question: given the environmental characteristics of a location, how similar is it to places where people chose to settle or bury their dead in the past?</p>
-
-  <div class="method-grid">
-    <div class="method-block">
-      <h4>Phase 1 — Learning</h4>
-      <p>The model receives two sets of locations: 169 known archaeological sites and 1,000 random background points. For each it looks up five environmental values. It learns which combinations correlate with site presence and which with absence.</p>
-    </div>
-    <div class="method-block">
-      <h4>Phase 2 — Predicting</h4>
-      <p>Once trained, the model evaluates every pixel in the study area, looks up its environmental values, and outputs a probability between 0 and 1. The result is a continuous surface showing areas of high archaeological potential.</p>
-    </div>
-    <div class="method-block">
-      <h4>Random Forest — 200 trees</h4>
-      <p>Rather than asking one decision tree for an answer, the model asks 200 — each trained on a slightly different random subset of data. The final prediction is the average of all 200 votes. This makes the result robust to noise: no single quirk in the training data can dominate the outcome.</p>
-    </div>
-    <div class="method-block">
-      <h4>Spatial cross-validation — N-1 blocks</h4>
-      <p>The study area is divided into geographic blocks. The model trains on all blocks except one, then tests its predictions on the held-out block — rotating through every block in turn. This prevents nearby sites from leaking information across the training/test boundary, which would artificially inflate accuracy.</p>
-    </div>
-    <div class="method-block">
-      <h4>Presence-only modelling</h4>
-      <p>The model only knows where sites are — not where they definitively are not. Background points are random locations used as a statistical stand-in for absence. This means the output is a relative probability surface: high values indicate terrain similar to known sites, not confirmed site locations.</p>
-    </div>
-    <div class="method-block">
-      <h4>Feature importance (Gini impurity)</h4>
-      <p>Each time a tree makes a split — "elevation above 300m, go left" — it measures how much purer the resulting groups become. Features that consistently produce clean, informative splits accumulate higher importance scores. The reported percentages sum to 100% across all 200 trees.</p>
-    </div>
-    <div class="method-block">
-      <h4>Standardisation</h4>
-      <p>Before training, all five features are rescaled to the same units — mean zero, standard deviation one. This prevents elevation (in hundreds of metres) from dominating aspect (which ranges −1 to 1) simply because its numbers are larger. Every feature competes on equal terms.</p>
-    </div>
-    <div class="method-block">
-      <h4>Spatial autocorrelation</h4>
-      <p>Nearby locations share similar environmental characteristics — Tobler's First Law of Geography. This creates a problem: randomly split training and test data, and the model looks artificially accurate because it has effectively seen near-identical examples during training. Spatial blocks enforce a genuine gap between what the model learns and what it is tested on.</p>
-    </div>
-    <div class="method-block">
-      <h4>Overfitting prevention</h4>
-      <p>A model that memorises its training data performs well on what it has seen but fails on new locations. Two parameters limit tree complexity: maximum depth of 6 (trees cannot grow arbitrarily elaborate) and minimum 5 samples per leaf (no split is made on fewer than 5 data points). The spatial block CV AUC of 0.756 ± 0.136 across five geographic folds suggests the model generalises rather than memorises.</p>
-    </div>
-    <div class="method-block">
-      <h4>Gaussian smoothing</h4>
-      <p>The raw model output changes value sharply pixel by pixel. Archaeological site potential in reality transitions gradually across a landscape. A Gaussian blur blends each pixel with its neighbours — closer neighbours contributing more — producing smooth gradients that represent genuine zones of potential rather than isolated lucky pixels.</p>
-    </div>
-    <div class="method-block">
-      <h4>Probability surface vs kernel density</h4>
-      <p>A kernel density map simply shows where known sites cluster — high density where archaeologists have already looked, low density where they have not. This is circular. A probability surface predicts where the environment is favourable regardless of survey history, flagging unsurveyed areas as high potential. This distinction is the core scientific contribution of the approach.</p>
-    </div>
-    <div class="method-block">
-      <h4>Class imbalance</h4>
-      <p>169 site locations versus 1,000 background points — the model sees roughly six times more non-sites than sites. The ratio is a deliberate methodological choice: too few background points and the model cannot learn what ordinary terrain looks like; too many and it biases toward predicting absence everywhere.</p>
-    </div>
-  </div>
-
-  <h3>Environmental covariates</h3>
-  <div class="tech-list">
-    <span class="tech-tag" class="color-done">✓ Elevation (SRTM 90m) — 27.2%</span>
-    <span class="tech-tag" class="color-done">✓ Slope — 25.3%</span>
-    <span class="tech-tag" class="color-done">✓ Aspect (northness) — 25.4%</span>
-    <span class="tech-tag" class="color-done">✓ Distance to water (OSM) — 16.4%</span>
-    <span class="tech-tag" class="color-done">✓ Soil favourability (BPEJ) — 5.7%</span>
-    <span class="tech-tag">LiDAR derivatives (ČÚZK)</span>
-    <span class="tech-tag">Complete loess distribution</span>
-    <span class="tech-tag">Raw material proximity</span>
-    <span class="tech-tag">Viewshed</span>
-    <span class="tech-tag">Paleovegetation (future)</span>
-  </div>
-</section>
-
-<!-- LIMITATIONS -->
-<section class="fade-in">
-  <div class="section-label">Limitations & Transparency</div>
-  <h2>What this <em>is not</em></h2>
-  <p>This is a proof of concept at an early stage of development. Several important limitations apply.</p>
-
-  <div class="disclaimer">
-    <p>The corpus reflects potential bias inherent in manual source selection by a single researcher. The geographic distribution of extracted sites may over- or under-represent certain regions or periods relative to the true archaeological record. The geocoding step introduces additional uncertainty, particularly for sites described only at the district or region level. Results should be treated as hypotheses for further investigation, not as conclusions. The predictive model outputs probability surfaces — not confirmed site locations.</p>
-  </div>
-
-  <h3>Known issues in current version</h3>
-  <p>Approximately 49% of geocoding attempts failed or returned only broad regional coordinates, reflecting the difficulty of resolving place names described only at district or regional level. Improving extraction prompt specificity is identified as the highest-priority next step. The static environmental layers (modern elevation, current river positions) are an imperfect proxy for past landscapes, particularly for Palaeolithic and Mesolithic sites.</p>
-
-  <h3>Resolution and the river valley problem</h3>
-  <p>The model operates at 90m raster resolution — roughly one pixel per 700m × 1km at Czech latitudes. Prehistoric settlement frequently clustered in narrow river terrace corridors 200–400m wide. At this resolution, a single pixel averages the terrace with the adjacent valley slope, causing the model to systematically underestimate potential in some of the most archaeologically productive landscapes in Bohemia — including the Elbe (Labe) valley corridor near Litoměřice, the Ohře valley, and parts of the Polabí lowlands. This is a known limitation addressable through higher resolution LiDAR-derived input data, not through parameter adjustment.</p>
-
-  <h3>On the integrity of the model</h3>
-  <p>The model parameters were not adjusted to match known archaeological distributions. Tuning a predictive model toward expected outcomes — however well-intentioned — transforms it from a scientific instrument into a sophisticated redrawing of already-known archaeology. Where the model underperforms relative to known site distributions, this is documented as a data or resolution limitation, not corrected by fitting. This commitment to methodological integrity is especially important given the history of spatially-inflated archaeological claims in Central European scholarship.</p>
-
-  <h3>What rigorous validation looks like</h3>
-  <p>The project uses spatial block cross-validation as the only acceptable validation method — the study area is divided into geographic strips, and the model is tested on regions it has never seen during training. Future iterations will implement per-period models separating Neolithic, Eneolithic, and Bronze Age site distributions, and will use an independent withheld validation set for final performance assessment.</p>
-</section>
-
-<!-- TECH STACK -->
-<section class="fade-in">
-  <div class="section-label">Technical</div>
-  <h2>Built <em>entirely</em> with free tools</h2>
-  <p>Every component of this pipeline runs locally, requires no subscription, and costs nothing to operate.</p>
-
-  <div class="tech-list">
-    <span class="tech-tag">Python 3.13</span>
-    <span class="tech-tag">Mistral 7B Instruct Q4_K_M</span>
-    <span class="tech-tag">LM Studio</span>
-    <span class="tech-tag">PyMuPDF</span>
-    <span class="tech-tag">GeoPandas</span>
-    <span class="tech-tag">scikit-learn</span>
-    <span class="tech-tag">Nominatim</span>
-    <span class="tech-tag">QGIS</span>
-    <span class="tech-tag">Shapely</span>
-    <span class="tech-tag">OpenStreetMap</span>
-    <span class="tech-tag">Apple M1 16GB</span>
-  </div>
-
-  <div class="code-block">
-<span class="comment"># Full pipeline — run in sequence</span>
-<span class="command">python3</span> pipeline/rename_pdfs.py
-<span class="command">python3</span> pipeline/01_pdf_extractor_local.py
-<span class="command">python3</span> pipeline/02_geocoder.py
-<span class="command">python3</span> pipeline/03_export_qgis.py
-<span class="command">python3</span> pipeline/04_predict.py
-<span class="comment">
-# All paths hardcoded to ~/Documents/Study/
-# Resume-safe: interrupted runs continue from last saved point
-# Output: probability GeoTIFF + known_sites.gpkg for QGIS</span>
-  </div>
-
-  <h3>Incremental processing by design</h3>
-  <p>Every step in the pipeline saves its results to disk after each processed item. This means runs can be safely interrupted at any point — by choice or by circumstance — and resumed exactly where they left off with no data loss. There is no need to process the entire corpus before seeing results.</p>
-  <p>In practice this enables a deliberately iterative workflow: process a subset, run the geocoder and export, open QGIS and evaluate the preliminary map, then continue processing while the partial results are already usable. Early runs at 9% corpus completion already produced geographically meaningful results — demonstrating that the pipeline can be evaluated and iterated long before full processing is complete.</p>
-  <p>This design also means the corpus can grow over time without restarting from scratch. New papers added to the collection are simply picked up on the next run.</p>
-</section>
-
-<!-- ROADMAP -->
-<section class="fade-in">
-  <div class="section-label">Roadmap</div>
-  <h2>Where this <em>goes next</em></h2>
-
-  <h3>Short term</h3>
-  <p>Improve geocoding precision by tuning the extraction prompt to capture village-level place names — currently ~49% of attempts fail or return only regional coordinates. Integrate Czech ČÚZK LiDAR derivatives to address the river valley resolution problem. Implement geographic clustering for spatial blocks rather than the current longitudinal strip approach.</p>
-
-  <h3>Medium term</h3>
-  <p>Build OCR preprocessing step for the 185 scanned PDFs — older Czech and Slovak journals from the 1930s–1960s containing primary source data unavailable in any digital database. Add loess distribution layer from ESDAC. Implement per-period models separating Palaeolithic, Neolithic, Eneolithic, and Bronze Age.</p>
-
-  <h3>Long term</h3>
-  <p>Expand corpus to Hungarian and Romanian language sources. Integrate negative evidence — survey reports explicitly recording no finds — to address the pseudo-absence problem. Publish methodology as an open-source contribution to computational archaeology.</p>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>This project is in active development. Results presented here are preliminary and should not be cited or used for any planning or heritage management purpose.</p>
-  <p class="mono">CE ARCHAEOLOGICAL SITE PREDICTION · v1.0 · 2026</p>
-</footer>
+<footer>EKONOMIKA JE FEJK</footer>
 
 <script>
-  // Scroll-triggered fade-in
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
+const nameInput  = document.getElementById('nameInput');
+const quoteInput = document.getElementById('quoteInput');
+const charCount  = document.getElementById('charCount');
+const previewName  = document.getElementById('previewName');
+const previewQuote = document.getElementById('previewQuote');
+const statusMsg    = document.getElementById('statusMsg');
+const MAX = 220;
 
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+const randomQuotes = [
+  "Jsem obětí své vysoké inteligence. Pražská kavárna prostě nechápe, že rozumím Václavu Havlovi víc než Václav Havel samotný.",
+  "Moje myšlenky jsou tak komplexní, že je chápe jen 0,3 % populace. A ti mi právě píšou na LinkedIn.",
+  "Kapitalismus je v podstatě taneční soutěž, kde hraje hudba jen pro ty, kdo mají dobré boty.",
+  "Inflace? To jsou jen chyby ve vašem vztahu k penězům. Léčte trauma, ne úrokové sazby.",
+  "Řekl jsem to před deseti lety. Nikdo neposlouchal. Teď říkám totéž a říkají tomu 'originální'.",
+  "Adam Smith byl dobrý, ale nepočítal se mnou.",
+  "Každá recese je vlastně pozvánka k existenciální reflexi. Bohužel ji lidé odmítají a jdou raději do práce.",
+  "Nevím, proč jsou lidé chudí. Já nikdy chudý nebyl a funguje mi to výborně.",
+  "HDP je číslo bez duše. Já jsem číslo se dvěma dušemi – proto mě akademici nesnáší.",
+  "Trh je jen kolektivní halucinace. Já jsem jedna z mála osob, která to ví a zároveň z ní profituje.",
+  "Říkám věci, které jsou pravdivé, ale nepříjemné. Proto jsem nepopulární. Nebo populární. Záleží na publiku.",
+  "Ekonomie je věda o lidech, kteří se chovají iracionálně. Já jsem výjimka, která potvrzuje pravidlo.",
+  "Češi jsou národ, který si zaslouží lepší elity. Naštěstí já tu jsem.",
+  "Můj problém není, že mám pravdu. Můj problém je, že ji mám příliš brzy.",
+  "Keynes byl génius, ale nezažil mě na přednášce.",
+  "Lidé si pletou inteligenci s tím, že se mnou souhlasí. Jsou to blízcí pojmy, ale ne totožné.",
+  "Pracuji na knize, která změní způsob, jakým lidstvo přemýšlí o penězích. Píšu ji už čtrnáct let.",
+  "Média mi dávají prostor, protože říkám kontroverze. Já jim ale dávám hloubku. Je to nevyvážený vztah.",
+  "Kdybych byl politik, byl bych příliš chytrý. To voliči trestají.",
+  "Přátelé mi říkají, že jsem nesnesitelný. Kolegové mi říkají totéž. Jsem tedy konzistentní.",
+  "Neříkám, že ostatní ekonomové jsou špatní. Říkám, že jsou jiní. A to je zdvořilý způsob, jak říct totéž.",
+  "Evropa potřebuje více vizionářů a méně účetních. Já jsem obojí, ale primárně to první.",
+  "Bohatství není problém. Problém je, že ho mají ti nesprávní lidé.",
+  "Vždy říkám, co si myslím. Lidé to občas nazvou provokací. Já tomu říkám služba veřejnosti.",
+  "Globalizace je jako manželství — vstoupíte do ní s optimismem a postupně si uvědomíte, co jste podepsali.",
+];
+
+function updatePreview() {
+  previewName.textContent = (nameInput.value.trim() || 'Sedláček') + ':';
+  previewQuote.textContent = quoteInput.value.trim() || '…';
+}
+
+function updateCount() {
+  const len = quoteInput.value.length;
+  charCount.textContent = `${len} / ${MAX}`;
+  charCount.className = 'char-count' + (len > MAX * 0.9 ? ' warn' : '') + (len >= MAX ? ' over' : '');
+}
+
+nameInput.addEventListener('input', updatePreview);
+quoteInput.addEventListener('input', () => { updatePreview(); updateCount(); });
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  quoteInput.value = '';
+  nameInput.value = 'Sedláček';
+  updatePreview(); updateCount();
+});
+
+let lastRandom = -1;
+document.getElementById('randomBtn').addEventListener('click', () => {
+  let idx;
+  do { idx = Math.floor(Math.random() * randomQuotes.length); } while (idx === lastRandom && randomQuotes.length > 1);
+  lastRandom = idx;
+  quoteInput.value = randomQuotes[idx];
+  updatePreview(); updateCount();
+});
+
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const card = document.getElementById('memeCard');
+
+  try {
+
+    const canvas = await html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#111111'
+    });
+
+    const blob = await new Promise(resolve =>
+      canvas.toBlob(resolve, 'image/png')
+    );
+
+    if (!blob) {
+      showStatus('❌ Nepodařilo se vytvořit PNG');
+      return;
+    }
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sedlacek.png';
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+
+    showStatus('✅ PNG staženo');
+
+  } catch (e) {
+    console.error(e);
+    showStatus('❌ Chyba při generování PNG');
+  }
+});
+
+function showStatusfunction showStatus(msg) {
+  statusMsg.textContent = msg;
+  setTimeout(() => statusMsg.textContent = '', 3500);
+}
+
+updatePreview();
+updateCount();
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </body>
 </html>
