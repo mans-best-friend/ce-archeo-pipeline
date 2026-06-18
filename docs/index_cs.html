@@ -383,7 +383,7 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-content">
-    <div class="label">Středoevropská Archeologie · Výpočetní Metody · v1.0</div>
+    <div class="label">Středoevropská Archeologie · Výpočetní Metody · v1.1</div>
     <h1>Predikce <em>Neobjevených</em><br>Archeologických Lokalit</h1>
     <p class="hero-sub">Open-source pipeline pro automatickou extrakci, geokódování a prostorové modelování pravěkých sídelních dat z vícejazyčné středoevropské literatury.</p>
     <div class="hero-stats">
@@ -630,7 +630,7 @@
   </div>
 
   <h3>Známé problémy aktuální verze</h3>
-  <p>Přibližně 49 % pokusů o geokódování selhalo nebo vrátilo pouze přibližné regionální souřadnice. To bude řešeno vylepšením extrakčního promptu tak, aby zachycoval místní názvy na úrovni obcí. Statické environmentální vrstvy (moderní nadmořská výška, současné pozice řek) jsou nedokonalým přiblížením historické krajiny, zejména pro paleolitické a mezolitické lokality.</p>
+  <p>Přibližně 49 % pokusů o geokódování selhalo nebo vrátilo pouze přibližné regionální souřadnice. To bude řešeno vylepšením extrakčního promptu tak, aby zachycoval místní názvy na úrovni obcí — cílem je snížit chybovost z 49 % na méně než 20 %. Statické environmentální vrstvy (moderní nadmořská výška, současné pozice řek) jsou nedokonalým přiblížením historické krajiny, zejména pro paleolitické a mezolitické lokality.</p>
 
   <h3>Rozlišení a problém říčních údolí</h3>
   <p>Model pracuje s rastrovým rozlišením 90 m — zhruba jeden pixel na 700 × 1 000 m v českých zeměpisných šířkách. Pravěké osídlení se často soustředilo v úzkých říčních terasách širokých 200–400 m. Při tomto rozlišení jeden pixel průměruje terasu s přilehlým svahem údolí, což způsobuje, že model systematicky podceňuje potenciál některých archeologicky nejbohatších krajin v Čechách — včetně labského koridoru u Litoměřic, údolí Ohře a části Polabí. Toto je známé omezení řešitelné vysoce rozlišenými vstupními daty z LiDARu, nikoli úpravou parametrů modelu.</p>
@@ -639,7 +639,7 @@
   <p>Parametry modelu nebyly upravovány tak, aby odpovídaly známým archeologickým distribucím. Ladění prediktivního modelu směrem k očekávaným výsledkům — byť v dobré víře — ho přeměňuje z vědeckého nástroje na sofistikované překreslení již známé archeologie. Tam, kde model zaostává za známými distribucemi lokalit, je to zdokumentováno jako datové nebo rozlišovací omezení, nikoli korigováno přizpůsobením. Tento závazek metodologické integrity je zvláště důležitý s ohledem na historii prostorově nadhodnocených archeologických tvrzení ve středoevropském bádání.</p>
 
   <h3>Jak vypadá důkladná validace</h3>
-  <p>Projekt se zavazuje používat výhradně prostorovou křížovou validaci jako jedinou přijatelnou metodu. Samostatné modely budou trénovány pro každé archeologické období a typ lokality. Nezávislá validační sada známých lokalit — vyčleněná z tréninku — poskytne závěrečné poctivé hodnocení výkonu.</p>
+  <p>Projekt se zavazuje používat výhradně prostorovou křížovou validaci jako jedinou přijatelnou metodu. Samostatné modely budou trénovány pro každé archeologické období a typ lokality. Nezávislá validační sada známých lokalit — vyčleněná z tréninku — poskytne závěrečné poctivé hodnocení výkonu. Plánovaná je rovněž integrace databáze AMČR (Archeologická mapa České republiky) jako nezávislého zdroje pro validaci modelu, a přechod na LiDAR data DMR5G z ČÚZK pro rozlišení 1 m, které by mělo řešit problém podceňování úzkých říčních teras popsaný výše.</p>
 </section>
 
 <!-- TECHNOLOGIE -->
@@ -687,19 +687,19 @@
   <h2>Kam projekt <em>směřuje</em></h2>
 
   <h3>Krátkodobě</h3>
-  <p>Dokončit extrakční běh přes všech 281 článků. Zlepšit přesnost geokódování vyladěním extrakčního promptu tak, aby zachycoval místní názvy na úrovni obcí. Stáhnout česká LiDAR data z ČÚZK a výšková data SRTM pro studované území. Spustit první kompletní prediktivní model s prostorovou křížovou validací.</p>
+  <p>Dokončit extrakční běh přes všech 281 článků. Zlepšit přesnost geokódování vyladěním extrakčního promptu tak, aby zachycoval místní názvy na úrovni obcí — cíl: snížit chybovost ze 49 % na méně než 20 %. Stáhnout česká LiDAR data DMR5G z ČÚZK (cílové rozlišení 1 m) a výšková data SRTM pro studované území. Spustit první kompletní prediktivní model s prostorovou křížovou validací.</p>
 
   <h3>Střednědobě</h3>
   <p>Vybudovat krok OCR předzpracování pro 185 naskenovaných PDF — starší české a slovenské časopisy z let 1930–1960 obsahující primární data nedostupná v žádné digitální databázi. Přidat vrstvu rozšíření spraše z ESDAC. Implementovat samostatné modely pro paleolit, neolit, eneolit a dobu bronzovou.</p>
 
   <h3>Dlouhodobě</h3>
-  <p>Rozšířit korpus o maďarské a rumunské jazykové zdroje. Integrovat negativní evidenci — terénní zprávy explicitně zaznamenávající absenci nálezů — k řešení problému pseudo-absencí. Publikovat metodologii jako open-source příspěvek k výpočetní archeologii.</p>
+  <p>Rozšířit korpus o maďarské a rumunské jazykové zdroje. Integrovat negativní evidenci — terénní zprávy explicitně zaznamenávající absenci nálezů — k řešení problému pseudo-absencí. Využít databázi AMČR jako nezávislý zdroj pro validaci výsledného modelu. Publikovat metodologii jako open-source příspěvek k výpočetní archeologii.</p>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <p>Projekt je aktivně vyvíjen. Zde prezentované výsledky jsou předběžné a nesmí být citovány ani použity pro žádné plánovací či památkové účely.</p>
-  <p class="mono">PREDIKCE ARCHEOLOGICKÝCH LOKALIT VE STŘEDNÍ EVROPĚ · v1.0 · 2026</p>
+  <p class="mono">PREDIKCE ARCHEOLOGICKÝCH LOKALIT VE STŘEDNÍ EVROPĚ · v1.1 · 2026</p>
 </footer>
 
 <script>
